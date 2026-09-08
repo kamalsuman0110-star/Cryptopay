@@ -1,929 +1,613 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>CryptoPay Pro</title>
-  <!-- Ethers.js for Web3 Blockchain Interaction -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-  <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #090d16;
-      color: #0f172a;
-    }
-    .app {
-      max-width: 430px;
-      min-height: 100vh;
-      margin: auto;
-      background: #f8fafc;
-      position: relative;
-      padding-bottom: 75px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    header {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: white;
-      padding: 18px 16px 20px;
-      border-radius: 0 0 24px 24px;
-    }
-    .top-bar { display: flex; justify-content: space-between; align-items: center; }
-    .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-    .user-pill {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.15);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
-    .wallet-summary {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      background: rgba(255,255,255,0.08);
-      padding: 12px;
-      border-radius: 16px;
-    }
-    .wallet-col small { font-size: 11px; opacity: 0.8; display: block; }
-    .wallet-col b { font-size: 17px; letter-spacing: -0.5px; }
-    .page { display: none; padding: 16px; }
-    .page.active { display: block; }
-    .section-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: #1e293b;
-      margin: 16px 0 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .service-btn {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 10px 4px;
-      text-align: center;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      font-size: 11px;
-      font-weight: 600;
-      color: #334155;
-    }
-    .service-btn:active { background: #f1f5f9; }
-    .icon-box {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-    .bg-purple { background: #ede9fe; color: #6d28d9; }
-    .bg-blue { background: #e0f2fe; color: #0284c7; }
-    .bg-amber { background: #fef3c7; color: #d97706; }
-    .bg-emerald { background: #d1fae5; color: #059669; }
-    .card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 14px;
-      margin: 10px 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-    }
-    .coin-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #f1f5f9;
-      cursor: pointer;
-    }
-    .coin-row:last-child { border: 0; }
-    .coin-symbol-box {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 13px;
-      margin-right: 10px;
-    }
-    .green { color: #16a34a; font-weight: 600; }
-    .red { color: #dc2626; font-weight: 600; }
-    label { font-size: 12px; font-weight: 600; color: #475569; display: block; margin-top: 8px; }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      margin: 5px 0 10px;
-      font-size: 14px;
-      background: #fff;
-    }
-    button.primary {
-      width: 100%;
-      padding: 13px;
-      border: 0;
-      border-radius: 12px;
-      background: #0f172a;
-      color: white;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-    button.secondary {
-      width: 100%;
-      padding: 11px;
-      border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      background: white;
-      color: #1e293b;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    .bottom {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      max-width: 430px;
-      height: 60px;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 10;
-    }
-    .nav { border: 0; background: none; font-size: 11px; cursor: pointer; color: #64748b; }
-    .nav b { display: block; font-size: 18px; margin-bottom: 2px; }
-    .badge {
-      padding: 3px 8px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      background: #dcfce7;
-      color: #15803d;
-    }
-    .badge-unverified { background: #fee2e2; color: #b91c1c; }
-    .historyItem {
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f5f9;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .loader {
-      width: 40px;
-      height: 40px;
-      border: 3px solid #e2e8f0;
-      border-top: 3px solid #0f172a;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 25px auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .qr {
-      width: 160px;
-      height: 160px;
-      margin: 14px auto;
-      background: repeating-linear-gradient(45deg, #0f172a 0 4px, #fff 4px 8px);
-      border: 6px solid white;
-      box-shadow: 0 0 0 1px #cbd5e1;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Interactive Hybridization Lab</title>
 
-    /* SECURITY LOCK OVERLAY */
-    #lockScreen {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: #090d16;
-      color: white;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 24px;
-      text-align: center;
-    }
-    .pin-dots {
-      display: flex;
-      gap: 12px;
-      margin: 24px 0;
-    }
-    .pin-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      border: 2px solid #64748b;
-    }
-    .pin-dot.filled { background: #22c55e; border-color: #22c55e; }
-    .keypad {
-      display: grid;
-      grid-template-columns: repeat(3, 70px);
-      gap: 16px;
-      margin-top: 10px;
-    }
-    .key-btn {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: #1e293b;
-      color: white;
-      border: 0;
-      font-size: 22px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .key-btn:active { background: #334155; }
-  </style>
+<style>
+*{box-sizing:border-box}
+
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ color:white;
+ background:linear-gradient(135deg,#061326,#123e62);
+}
+
+header{
+ text-align:center;
+ padding:22px 12px;
+}
+
+h1{margin:0;font-size:28px}
+header p{color:#b9d9ef}
+
+.wrap{
+ max-width:950px;
+ margin:auto;
+ padding:12px;
+}
+
+.section-title{
+ margin:18px 0 10px;
+}
+
+.types{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:10px;
+}
+
+.type{
+ padding:16px 5px;
+ text-align:center;
+ border-radius:16px;
+ background:#ffffff12;
+ border:1px solid #ffffff20;
+ cursor:pointer;
+ transition:.2s;
+}
+
+.type.active{
+ background:#159bd455;
+ border-color:#65d5ff;
+}
+
+.type b{font-size:21px}
+.type small{
+ display:block;
+ margin-top:6px;
+ color:#b9d9ef;
+}
+
+.examples{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:9px;
+}
+
+.ex{
+ padding:13px;
+ border-radius:13px;
+ background:#ffffff0d;
+ border:1px solid #ffffff18;
+ cursor:pointer;
+}
+
+.ex.active{
+ border-color:#61d4ff;
+ background:#168bc533;
+}
+
+.ex strong{font-size:18px}
+.ex span{
+ display:block;
+ margin-top:5px;
+ color:#a9cde4;
+ font-size:12px;
+}
+
+.panel{
+ margin-top:17px;
+ padding:18px;
+ border-radius:20px;
+ background:#ffffff10;
+ border:1px solid #ffffff20;
+}
+
+#compound{
+ text-align:center;
+ margin-top:0;
+}
+
+.info{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
+}
+
+.box{
+ padding:12px;
+ border-radius:12px;
+ background:#00000025;
+}
+
+.label{
+ font-size:11px;
+ color:#91bfdd;
+}
+
+.value{
+ margin-top:5px;
+ font-size:16px;
+}
+
+.config{
+ margin-top:15px;
+ padding:15px;
+ border-radius:15px;
+ background:#020c17;
+}
+
+.config h3{margin-top:0}
+
+.config-line{
+ font-size:19px;
+ letter-spacing:1px;
+ padding:7px 0;
+}
+
+.orbitals{
+ display:flex;
+ gap:10px;
+ flex-wrap:wrap;
+ margin-top:10px;
+}
+
+.orbital{
+ min-width:55px;
+ padding:12px 8px;
+ border:1px solid #5fcfff;
+ border-radius:10px;
+ text-align:center;
+ background:#ffffff08;
+}
+
+.electron{
+ display:inline-block;
+ margin:3px;
+ animation:electronPulse 1s infinite alternate;
+}
+
+@keyframes electronPulse{
+ from{transform:translateY(0)}
+ to{transform:translateY(-4px)}
+}
+
+/* HYBRIDIZATION ANIMATION */
+
+.animation{
+ margin-top:15px;
+ background:#020b15;
+ border-radius:18px;
+ padding:15px;
+ overflow:hidden;
+}
+
+.stage{
+ min-height:230px;
+ position:relative;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
+
+.atom-core{
+ width:62px;
+ height:62px;
+ border-radius:50%;
+ background:#ffc34d;
+ color:#111;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:bold;
+ box-shadow:0 0 25px #ffc34d;
+ z-index:4;
+}
+
+.orbit{
+ position:absolute;
+ width:75px;
+ height:35px;
+ border:2px solid #55d6ff;
+ border-radius:50%;
+ opacity:.9;
+ animation:orbitFloat 2s infinite alternate ease-in-out;
+}
+
+.orbit.s{
+ width:70px;
+ height:70px;
+ border-radius:50%;
+}
+
+.orbit.p1{
+ transform:rotate(90deg);
+}
+
+.orbit.p2{
+ transform:rotate(0deg);
+}
+
+.orbit.p3{
+ transform:rotate(45deg);
+}
+
+@keyframes orbitFloat{
+ from{transform:scale(.9) rotate(0deg)}
+ to{transform:scale(1.08) rotate(8deg)}
+}
+
+.hybrid-result{
+ display:flex;
+ justify-content:center;
+ gap:13px;
+ flex-wrap:wrap;
+ margin-top:10px;
+}
+
+.hybrid-orbital{
+ width:55px;
+ height:55px;
+ border-radius:50%;
+ background:#55d6ff;
+ color:#052033;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-weight:bold;
+ animation:hybridAppear 1.4s infinite alternate;
+}
+
+@keyframes hybridAppear{
+ from{transform:scale(.8);opacity:.45}
+ to{transform:scale(1);opacity:1}
+}
+
+.step{
+ margin-top:12px;
+ padding:12px;
+ background:#00000025;
+ border-radius:12px;
+ line-height:1.6;
+}
+
+button{
+ border:0;
+ border-radius:10px;
+ padding:10px 15px;
+ margin:5px;
+ cursor:pointer;
+ font-weight:bold;
+}
+
+.note{
+ margin-top:14px;
+ line-height:1.6;
+ color:#d6ebf8;
+}
+
+footer{
+ text-align:center;
+ padding:20px;
+ color:#83a9c2;
+ font-size:12px;
+}
+
+@media(max-width:600px){
+
+ .types{
+  grid-template-columns:repeat(2,1fr);
+ }
+
+ .examples{
+  grid-template-columns:1fr;
+ }
+
+ .info{
+  grid-template-columns:1fr;
+ }
+
+ h1{font-size:24px}
+
+}
+</style>
 </head>
+
 <body>
 
-  <!-- MASTER SECURITY APP LOCK -->
-  <div id="lockScreen">
-    <div style="font-size:36px; margin-bottom:10px;">🔒</div>
-    <h2 style="margin:0 0 6px;">CryptoPay Vault</h2>
-    <p style="font-size:13px; color:#94a3b8; margin:0;">Enter 4-digit Master Passcode (Demo: 1234)</p>
-    
-    <div class="pin-dots">
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
-      <div class="pin-dot" id="d4"></div>
-    </div>
-
-    <div class="keypad">
-      <button class="key-btn" onclick="pressKey('1')">1</button>
-      <button class="key-btn" onclick="pressKey('2')">2</button>
-      <button class="key-btn" onclick="pressKey('3')">3</button>
-      <button class="key-btn" onclick="pressKey('4')">4</button>
-      <button class="key-btn" onclick="pressKey('5')">5</button>
-      <button class="key-btn" onclick="pressKey('6')">6</button>
-      <button class="key-btn" onclick="pressKey('7')">7</button>
-      <button class="key-btn" onclick="pressKey('8')">8</button>
-      <button class="key-btn" onclick="pressKey('9')">9</button>
-      <button class="key-btn" style="background:transparent;" onclick="clearKeys()">C</button>
-      <button class="key-btn" onclick="pressKey('0')">0</button>
-      <button class="key-btn" style="background:transparent; font-size:18px;" onclick="deleteKey()">⌫</button>
-    </div>
-  </div>
-
-  <div class="app">
-    <!-- APP HEADER -->
-    <header>
-      <div class="top-bar">
-        <div class="brand">₿ CryptoPay Pro</div>
-        <div class="user-pill" onclick="show('profile')">
-          <span id="userStatusDot" style="width:7px; height:7px; border-radius:50%; background:#ef4444;"></span>
-          <span id="headerUserName">Kamal</span>
-        </div>
-      </div>
-      <div class="wallet-summary">
-        <div class="wallet-col">
-          <small>INR Bank / UPI</small>
-          <b id="inrBalanceText">₹48,250.00</b>
-        </div>
-        <div class="wallet-col" style="border-left: 1px solid rgba(255,255,255,0.2); padding-left:12px;">
-          <small>CryptoPay Portfolio</small>
-          <b id="cryptoValText">₹12,400.00</b>
-        </div>
-      </div>
-    </header>
-
-    <!-- TAB 1: HOME (PHONEPE UPI & SERVICES) -->
-    <section id="home" class="page active">
-      <!-- WEB3 ON-CHAIN CONNECT BANNER -->
-      <div class="card" style="background:#0f172a; color:white; border-color:#1e293b;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <b style="font-size:13px;">🔗 On-Chain Web3 Wallet</b><br>
-            <small id="web3StatusText" style="color:#94a3b8;">Not Connected</small>
-          </div>
-          <button class="primary" id="connectWeb3Btn" style="width:auto; padding:6px 12px; margin-top:0; font-size:12px; background:#4f46e5;" onclick="connectWeb3Wallet()">Connect</button>
-        </div>
-      </div>
-
-      <div class="section-title">
-        <span>Transfer Money</span>
-        <span id="kycBadgeHome" class="badge badge-unverified">eKYC Required</span>
-      </div>
-      <div class="grid-4">
-        <div class="service-btn" onclick="checkKycAndOpen('To Mobile')">
-          <div class="icon-box bg-purple">📱</div>
-          To Mobile
-        </div>
-        <div class="service-btn" onclick="checkKycAndOpen('To Bank/UPI')">
-          <div class="icon-box bg-blue">🏦</div>
-          To Bank/UPI
-        </div>
-        <div class="service-btn" onclick="show('receive')">
-          <div class="icon-box bg-emerald">📥</div>
-          Receive QR
-        </div>
-        <div class="service-btn" onclick="checkBalanceModal()">
-          <div class="icon-box bg-amber">📊</div>
-          Balance
-        </div>
-      </div>
-
-      <div class="section-title">Recharge & Pay Bills</div>
-      <div class="grid-4">
-        <div class="service-btn" onclick="openBillPay('Mobile Recharge')">
-          <div class="icon-box bg-blue">📲</div>
-          Recharge
-        </div>
-        <div class="service-btn" onclick="openBillPay('Electricity Bill')">
-          <div class="icon-box bg-amber">💡</div>
-          Electricity
-        </div>
-        <div class="service-btn" onclick="openBillPay('FASTag Recharge')">
-          <div class="icon-box bg-emerald">🚗</div>
-          FASTag
-        </div>
-        <div class="service-btn" onclick="openBillPay('DTH / Cable')">
-          <div class="icon-box bg-purple">📡</div>
-          DTH TV
-        </div>
-      </div>
-
-      <!-- CRYPTOPAY THEMATIC BASKETS -->
-      <div class="section-title">
-        <span>CryptoPay Coin Sets 🧺</span>
-        <span class="badge" style="background:#fef3c7; color:#b45309;">Curated Basket</span>
-      </div>
-      <div class="card" style="border-left: 4px solid #0f172a; cursor:pointer;" onclick="show('invest')">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <b style="font-size:14px;">Crypto Blue Chip Basket</b><br>
-            <small style="color:#64748b;">Top Assets: BTC, ETH, SOL (Auto-Rebalanced)</small>
-          </div>
-          <div style="text-align:right;">
-            <span class="green">+18.4% 1Y</span><br>
-            <button class="secondary" style="padding:4px 10px; margin-top:4px; font-size:11px;">Invest ₹500</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: SCAN & PAY -->
-    <section id="scan" class="page">
-      <h2 style="margin-top:0;">Scan Merchant QR 📷</h2>
-      <div class="card" style="text-align:center;">
-        <p class="small">Universal UPI & Crypto QR Decoder</p>
-        <div class="qr"></div>
-        <p>Merchant: <b>Star Supermarket</b></p>
-        <input id="scanAmount" type="number" placeholder="Enter amount in ₹">
-        <select id="scanPaymentMethod">
-          <option value="INR">Pay with SBI Bank UPI (₹)</option>
-          <option value="USDT">Pay with CryptoPay USDT Wallet</option>
-          <option value="BTC">Pay with Bitcoin Holding</option>
-        </select>
-        <button class="primary" onclick="processScanPay()">Pay Securely</button>
-      </div>
-    </section>
-
-    <!-- TAB 3: CRYPTOPAY WEALTH & SIP -->
-    <section id="invest" class="page">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2 style="margin:0;">CryptoPay Wealth 📈</h2>
-        <span class="badge">CoinGecko Oracle</span>
-      </div>
-      <p class="small" style="color:#64748b; margin-top:2px;">Automated Crypto SIP & Instant Swap</p>
-
-      <div class="card" style="background:#f8fafc; border-color:#cbd5e1;">
-        <b>⚡ Start Daily/Monthly Crypto SIP</b>
-        <p class="small" style="color:#334155; margin:4px 0 10px;">Automated recurring purchase straight from your bank account.</p>
-        <div class="grid-2">
-          <button class="primary" style="margin-top:0; font-size:13px;" onclick="openSipModal('BTC')">SIP in BTC (₹100/day)</button>
-          <button class="primary" style="margin-top:0; font-size:13px; background:#1e293b;" onclick="openSipModal('ETH')">SIP in ETH (₹100/day)</button>
-        </div>
-      </div>
-
-      <div class="section-title">Live Markets (1-Click Instant Swap)</div>
-      <div class="card" id="cryptoMarketList">
-        <p style="text-align:center; color:#64748b;">Connecting to price oracle...</p>
-      </div>
-    </section>
-
-    <!-- TAB 4: PASSBOOK / HISTORY -->
-    <section id="history" class="page">
-      <h2 style="margin-top:0;">Ledger Passbook 📜</h2>
-      <div class="card" id="fullTxList"></div>
-    </section>
-
-    <!-- TAB 5: PROFILE & EKYC -->
-    <section id="profile" class="page">
-      <h2 style="margin-top:0;">Profile & Security 🛡️</h2>
-      <div class="card">
-        <b>Account Details</b>
-        <label>Full Legal Name</label>
-        <input id="profName" value="Kamal Kumar">
-        <label>Linked Bank Account</label>
-        <input value="State Bank of India (••• 2847)" disabled style="background:#f1f5f9;">
-        <label>Primary UPI ID</label>
-        <input value="kamal@cryptopay" disabled style="background:#f1f5f9;">
-        <button class="primary" onclick="alert('Profile details updated!')">Save Changes</button>
-      </div>
-
-      <div class="card">
-        <b>Instant eKYC Center</b>
-        <p class="small" style="color:#64748b;">Aadhaar & PAN verification required for unthrottled volume.</p>
-        <button class="secondary" onclick="show('kyc')">🪪 Open eKYC Portal</button>
-      </div>
-
-      <div class="card">
-        <b>App Security Actions</b>
-        <button class="secondary" style="color:#dc2626; border-color:#fecaca;" onclick="lockAppManually()">🔒 Lock CryptoPay Vault</button>
-      </div>
-    </section>
-
-    <!-- eKYC PORTAL -->
-    <section id="kyc" class="page">
-      <h2 style="margin-top:0;">eKYC Verification 🪪</h2>
-      <div class="card">
-        <label>12-Digit Aadhaar Number</label>
-        <input id="kycAadhaar" maxlength="12" placeholder="e.g. 5489 1234 5678" value="548912345678">
-        <label>10-Digit PAN Number</label>
-        <input id="kycPan" maxlength="10" placeholder="e.g. ABCDE1234F" style="text-transform:uppercase;" value="ABCDE1234F">
-        <button class="primary" onclick="submitKYC()">Verify with UIDAI/NSDL</button>
-        <button class="secondary" onclick="show('home')">Back</button>
-      </div>
-    </section>
-
-    <!-- RECEIVE QR -->
-    <section id="receive" class="page">
-      <h2 style="margin-top:0;">My QR Code 📥</h2>
-      <div class="card" style="text-align:center;">
-        <p class="small">Scan to pay via PhonePe / UPI / CryptoPay</p>
-        <div class="qr"></div>
-        <b style="font-size:16px;">kamal@cryptopay</b>
-        <p class="small" style="color:#64748b;">Direct settlement into SBI Account</p>
-        <button class="primary" onclick="show('home')">Done</button>
-      </div>
-    </section>
-
-    <!-- TRANSFER & BILL FORM -->
-    <section id="actionForm" class="page">
-      <h2 id="actionTitle" style="margin-top:0;">Transfer Money</h2>
-      <div class="card">
-        <label id="actionInputLabel">Mobile Number / UPI ID</label>
-        <input id="actionTarget" placeholder="e.g. 9876543210 or name@upi">
-        <label>Amount (₹)</label>
-        <input id="actionAmount" type="number" placeholder="₹ Enter Amount">
-        <button class="primary" onclick="executePaymentFlow()">Proceed to Pay</button>
-        <button class="secondary" onclick="show('home')">Cancel</button>
-      </div>
-    </section>
-
-    <!-- PIN CONFIRMATION -->
-    <section id="pinPage" class="page">
-      <h2 style="margin-top:0;">Authorize Transaction</h2>
-      <div class="card">
-        <p class="small">Recipient / Service: <b id="pinPayee">---</b></p>
-        <h2 id="pinAmountText" style="margin:4px 0 14px;">₹0</h2>
-        <label>Enter 4-Digit Security PIN (Demo: 1234)</label>
-        <input id="txPin" type="password" maxlength="4" placeholder="••••">
-        <button class="primary" onclick="startFinalSettlement()">Authorize & Settle</button>
-      </div>
-    </section>
-
-    <!-- PROCESSING ANIMATION -->
-    <section id="processing" class="page">
-      <div style="text-align:center; padding-top:80px;">
-        <div class="loader"></div>
-        <h3 id="processText">Cryptographic verification in progress...</h3>
-        <p class="small">Communicating with banking gateway</p>
-      </div>
-    </section>
-
-    <!-- SUCCESS RECEIPT -->
-    <section id="success" class="page">
-      <div style="text-align:center; padding:20px 10px;">
-        <div style="width:65px; height:65px; border-radius:50%; background:#16a34a; color:white; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:32px;">✓</div>
-        <h2 style="margin:0 0 4px;">Payment Successful!</h2>
-        <div class="card" style="text-align:left;">
-          <p class="small">Amount Settled</p>
-          <h2 id="successAmountText" style="margin:2px 0 10px;">₹0</h2>
-          <p class="small">Beneficiary</p>
-          <b id="successTargetText">---</b><br><br>
-          <p class="small">Routing Network</p>
-          <b id="successModeText">SBI UPI 2.0 Settlement</b>
-        </div>
-        <button class="primary" onclick="show('home')">Back to Home</button>
-      </div>
-    </section>
-
-    <!-- BOTTOM NAVBAR -->
-    <nav class="bottom">
-      <button class="nav" onclick="show('home')"><b>⌂</b>Home</button>
-      <button class="nav" onclick="show('scan')"><b>▣</b>Scan</button>
-      <button class="nav" onclick="show('invest')"><b>📈</b>Wealth</button>
-      <button class="nav" onclick="show('history')"><b>📜</b>History</button>
-      <button class="nav" onclick="show('profile')"><b>👤</b>Profile</button>
-    </nav>
-  </div>
-
-  <script>
-    const CORRECT_PIN_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
-
-    // Persistent LocalStorage State
-    let inrBalance = parseFloat(localStorage.getItem('cp_inrBalance')) || 48250;
-    let cryptoValue = parseFloat(localStorage.getItem('cp_cryptoValue')) || 12400;
-    let isKycDone = localStorage.getItem('cp_isKycDone') === 'true';
-    let activeTx = {};
-    let enteredCode = "";
-
-    let transactions = JSON.parse(localStorage.getItem('cp_transactions')) || [
-      { title: "CryptoPay BlueChip SIP", sub: "Automated Daily Basket", amount: 500, type: "debit" },
-      { title: "Zomato Order", sub: "UPI Payment", amount: 420, type: "debit" },
-      { title: "Salary Direct Credit", sub: "NEFT Settlement", amount: 35000, type: "credit" }
-    ];
-
-    const cryptoConfig = {
-      BTC:   { id: 'bitcoin',       name: 'Bitcoin',   icon: '₿', defaultRate: 8500000 },
-      ETH:   { id: 'ethereum',      name: 'Ethereum',  icon: 'Ξ', defaultRate: 280000 },
-      SOL:   { id: 'solana',        name: 'Solana',    icon: 'S', defaultRate: 16000 },
-      USDT:  { id: 'tether',        name: 'Tether',    icon: '₮', defaultRate: 86.5 },
-      DOGE:  { id: 'dogecoin',      name: 'Dogecoin',  icon: 'Ð', defaultRate: 14.5 },
-      XRP:   { id: 'ripple',        name: 'XRP',       icon: 'X', defaultRate: 195 },
-      PEPE:  { id: 'pepe',          name: 'Pepe',      icon: '🐸', defaultRate: 0.00085 },
-      SHIB:  { id: 'shiba-inu',     name: 'Shiba Inu', icon: '🐕', defaultRate: 0.0019 },
-      FLOKI: { id: 'floki',         name: 'Floki',     icon: '⚔️', defaultRate: 0.015 },
-      ZIL:   { id: 'zilliqa',       name: 'Zilliqa',   icon: 'Z', defaultRate: 1.85 }
-    };
-
-    let liveRates = {};
-    let change24h = {};
-
-    Object.keys(cryptoConfig).forEach(sym => {
-      liveRates[sym] = cryptoConfig[sym].defaultRate;
-      change24h[sym] = 0;
-    });
-
-    function saveState() {
-      localStorage.setItem('cp_inrBalance', inrBalance);
-      localStorage.setItem('cp_cryptoValue', cryptoValue);
-      localStorage.setItem('cp_isKycDone', isKycDone);
-      localStorage.setItem('cp_transactions', JSON.stringify(transactions));
-    }
-
-    // Web3 Live Blockchain Connector
-    async function connectWeb3Wallet() {
-      if (window.ethereum) {
-        try {
-          const provider = new ethers.providers.Web3Provider(window.ethereum);
-          await provider.send("eth_requestAccounts", []);
-          const signer = provider.getSigner();
-          const address = await signer.getAddress();
-          const balance = await provider.getBalance(address);
-          const ethBalance = ethers.utils.formatEther(balance);
-
-          document.getElementById('web3StatusText').innerText = `${address.slice(0, 6)}...${address.slice(-4)} (${parseFloat(ethBalance).toFixed(4)} ETH)`;
-          document.getElementById('connectWeb3Btn').innerText = 'Connected';
-          document.getElementById('connectWeb3Btn').style.background = '#16a34a';
-        } catch (err) {
-          alert('Web3 connection rejected or failed.');
-        }
-      } else {
-        alert('No Web3 Wallet detected. Please open inside MetaMask / Trust Wallet browser.');
-      }
-    }
-
-    async function sha256(message) {
-      const msgBuffer = new TextEncoder().encode(message);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    function pressKey(num) {
-      if (enteredCode.length < 4) {
-        enteredCode += num;
-        updateDots();
-        if (enteredCode.length === 4) verifyLockPin();
-      }
-    }
-
-    function deleteKey() {
-      enteredCode = enteredCode.slice(0, -1);
-      updateDots();
-    }
-
-    function clearKeys() {
-      enteredCode = "";
-      updateDots();
-    }
-
-    function updateDots() {
-      for (let i = 1; i <= 4; i++) {
-        const dot = document.getElementById(`d${i}`);
-        if (i <= enteredCode.length) dot.classList.add('filled');
-        else dot.classList.remove('filled');
-      }
-    }
-
-    async function verifyLockPin() {
-      const hash = await sha256(enteredCode);
-      if (hash === CORRECT_PIN_HASH) {
-        document.getElementById('lockScreen').style.display = 'none';
-        sessionStorage.setItem('cryptopay_auth', 'active');
-      } else {
-        alert('Invalid Security Passcode! Try 1234.');
-        clearKeys();
-      }
-    }
-
-    function lockAppManually() {
-      sessionStorage.removeItem('cryptopay_auth');
-      clearKeys();
-      document.getElementById('lockScreen').style.display = 'flex';
-    }
-
-    function show(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      const target = document.getElementById(id);
-      if (target) target.classList.add('active');
-      window.scrollTo(0, 0);
-    }
-
-    function checkKycAndOpen(type) {
-      if (!isKycDone) {
-        alert("⚠️ Please complete your 1-Minute eKYC to enable Fund Transfers!");
-        show('kyc');
-      } else {
-        openTransferModal(type);
-      }
-    }
-
-    function openTransferModal(type) {
-      document.getElementById('actionTitle').innerText = type;
-      document.getElementById('actionInputLabel').innerText = type === 'To Mobile' ? 'Receiver Mobile Number' : 'Bank Account / UPI ID';
-      document.getElementById('actionTarget').placeholder = type === 'To Mobile' ? '10-digit mobile' : 'name@upi or Account Number';
-      document.getElementById('actionTarget').value = '';
-      document.getElementById('actionAmount').value = '';
-      show('actionForm');
-    }
-
-    function checkBalanceModal() {
-      alert(`CryptoPay Live Balances:\n• SBI Bank UPI: ₹${inrBalance.toLocaleString('en-IN')}\n• CryptoPay Portfolio: ₹${cryptoValue.toLocaleString('en-IN')}`);
-    }
-
-    function openBillPay(billType) {
-      document.getElementById('actionTitle').innerText = billType;
-      document.getElementById('actionInputLabel').innerText = 'Consumer / Reference ID';
-      document.getElementById('actionTarget').placeholder = 'Enter details...';
-      document.getElementById('actionTarget').value = '';
-      document.getElementById('actionAmount').value = '';
-      show('actionForm');
-    }
-
-    function openSipModal(coin) {
-      activeTx = {
-        title: `CryptoPay ${coin} SIP`,
-        target: `${coin} Automated Daily Purchase`,
-        amount: 100,
-        mode: "CryptoPay SIP Engine"
-      };
-      document.getElementById('pinPayee').innerText = activeTx.target;
-      document.getElementById('pinAmountText').innerText = "₹100 (Daily)";
-      show('pinPage');
-    }
-
-    function executePaymentFlow() {
-      const target = document.getElementById('actionTarget').value.trim();
-      const amount = parseFloat(document.getElementById('actionAmount').value);
-      const title = document.getElementById('actionTitle').innerText;
-
-      if (!target || !amount || amount <= 0) {
-        alert("Please enter valid details and amount.");
-        return;
-      }
-      if (amount > inrBalance) {
-        alert("Insufficient bank balance!");
-        return;
-      }
-
-      activeTx = {
-        title: title,
-        target: target,
-        amount: amount,
-        mode: "SBI UPI 2.0"
-      };
-
-      document.getElementById('pinPayee').innerText = target;
-      document.getElementById('pinAmountText').innerText = "₹" + amount.toLocaleString('en-IN');
-      show('pinPage');
-    }
-
-    function processScanPay() {
-      const amount = parseFloat(document.getElementById('scanAmount').value);
-      const mode = document.getElementById('scanPaymentMethod').value;
-      if (!amount || amount <= 0) {
-        alert("Please enter a valid amount.");
-        return;
-      }
-
-      activeTx = {
-        title: "Merchant Payment",
-        target: "Star Supermarket",
-        amount: amount,
-        mode: mode === 'INR' ? "SBI UPI Direct" : `CryptoPay ${mode} Swap`
-      };
-
-      document.getElementById('pinPayee').innerText = "Star Supermarket";
-      document.getElementById('pinAmountText').innerText = "₹" + amount.toLocaleString('en-IN');
-      show('pinPage');
-    }
-
-    async function startFinalSettlement() {
-      const pin = document.getElementById('txPin').value;
-      const hash = await sha256(pin);
-
-      if (hash !== CORRECT_PIN_HASH) {
-        alert("Invalid Transaction PIN! (Demo: 1234)");
-        return;
-      }
-
-      show('processing');
-      const steps = [
-        "Verifying cryptographic PIN signature...",
-        "Querying CoinGecko price oracle...",
-        "Executing atomic liquidity swap...",
-        "Instant settlement verified!"
-      ];
-      let i = 0;
-      const interval = setInterval(() => {
-        document.getElementById('processText').innerText = steps[i];
-        i++;
-        if (i >= steps.length) {
-          clearInterval(interval);
-          inrBalance -= activeTx.amount;
-          document.getElementById('inrBalanceText').innerText = "₹" + inrBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
-
-          document.getElementById('successAmountText').innerText = "₹" + activeTx.amount.toLocaleString('en-IN');
-          document.getElementById('successTargetText').innerText = activeTx.target;
-          document.getElementById('successModeText').innerText = activeTx.mode;
-
-          transactions.unshift({
-            title: activeTx.title,
-            sub: activeTx.target,
-            amount: activeTx.amount,
-            type: "debit"
-          });
-
-          saveState();
-          renderHistory();
-          document.getElementById('txPin').value = '';
-          show('success');
-        }
-      }, 600);
-    }
-
-    function submitKYC() {
-      const aadhaar = document.getElementById('kycAadhaar').value;
-      const pan = document.getElementById('kycPan').value;
-      if (aadhaar.length !== 12 || pan.length !== 10) {
-        alert("Enter valid 12-digit Aadhaar and 10-digit PAN.");
-        return;
-      }
-
-      show('processing');
-      document.getElementById('processText').innerText = "Verifying with UIDAI & Income Tax Department...";
-
-      setTimeout(() => {
-        isKycDone = true;
-        updateKycUI();
-        saveState();
-        alert('🎉 eKYC Verified Successfully! Fund transfer features unlocked.');
-        show('home');
-      }, 1500);
-    }
-
-    function updateKycUI() {
-      if (isKycDone) {
-        document.getElementById('userStatusDot').style.background = '#22c55e';
-        document.getElementById('kycBadgeHome').className = 'badge';
-        document.getElementById('kycBadgeHome').innerText = 'Verified ✓';
-      }
-    }
-
-    async function fetchLivePrices() {
-      const ids = Object.values(cryptoConfig).map(c => c.id).join(',');
-      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=inr&include_24hr_change=true`;
-
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        Object.keys(cryptoConfig).forEach(sym => {
-          const coinId = cryptoConfig[sym].id;
-          if (data[coinId] && data[coinId].inr) {
-            liveRates[sym] = data[coinId].inr;
-            change24h[sym] = data[coinId].inr_24h_change || 0;
-          }
-        });
-      } catch (err) {}
-      renderCryptoList();
-    }
-
-    function renderCryptoList() {
-      const container = document.getElementById('cryptoMarketList');
-      let html = '';
-      Object.keys(cryptoConfig).forEach(sym => {
-        const coin = cryptoConfig[sym];
-        const rate = liveRates[sym];
-        const change = change24h[sym];
-        const changeClass = change >= 0 ? 'green' : 'red';
-        const changeSign = change >= 0 ? '+' : '';
-        html += `
-          <div class="coin-row" onclick="buyCrypto('${coin.name}', '${sym}', ${rate})">
-            <div style="display:flex; align-items:center;">
-              <div class="coin-symbol-box">${coin.icon}</div>
-              <div>
-                <b>${coin.name}</b><br>
-                <small style="color:#64748b;">${sym}</small>
-              </div>
-            </div>
-            <div style="text-align:right;">
-              <b>₹${rate.toLocaleString('en-IN', { maximumFractionDigits: (rate < 1 ? 4 : 2) })}</b><br>
-              <span class="${changeClass}">${changeSign}${change.toFixed(2)}%</span>
-            </div>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    function buyCrypto(name, sym, rate) {
-      const amt = prompt(`Instant Buy ${name} (${sym})\nEnter INR amount to invest (Min ₹100):`, "500");
-      if (amt && parseFloat(amt) >= 100) {
-        const parsedAmt = parseFloat(amt);
-        if (parsedAmt > inrBalance) {
-          alert("Insufficient bank balance!");
-          return;
-        }
-        inrBalance -= parsedAmt;
-        cryptoValue += parsedAmt;
-        document.getElementById('inrBalanceText').innerText = "₹" + inrBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
-        document.getElementById('cryptoValText').innerText = "₹" + cryptoValue.toLocaleString('en-IN', {minimumFractionDigits: 2});
-
-        transactions.unshift({
-          title: `CryptoPay Buy: ${name}`,
-          sub: `Bought ${(parsedAmt / rate).toFixed(4)} ${sym}`,
-          amount: parsedAmt,
-          type: "debit"
-        });
-        saveState();
-        renderHistory();
-        alert(`🎉 Purchased ₹${parsedAmt} of ${name}! Added to CryptoPay Portfolio.`);
-      }
-    }
-
-    function renderHistory() {
-      const container = document.getElementById('fullTxList');
-      let html = '';
-      transactions.forEach(t => {
-        const sign = t.type === 'credit' ? '+' : '-';
-        const color = t.type === 'credit' ? 'green' : 'red';
-        html += `
-          <div class="historyItem">
-            <span><b>${t.title}</b><br><small style="color:#64748b;">${t.sub}</small></span>
-            <b class="${color}">${sign}₹${t.amount.toLocaleString('en-IN')}</b>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    // Initialize state
-    document.getElementById('inrBalanceText').innerText = "₹" + inrBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
-    document.getElementById('cryptoValText').innerText = "₹" + cryptoValue.toLocaleString('en-IN', {minimumFractionDigits: 2});
-    updateKycUI();
-    renderHistory();
-
-    if (sessionStorage.getItem('cryptopay_auth') === 'active') {
-      document.getElementById('lockScreen').style.display = 'none';
-    }
-
-    fetchLivePrices();
-    setInterval(fetchLivePrices, 60000);
-  </script>
-</body>
-</html>
+<header>
+<h1>🧪 Interactive Hybridization Lab</h1>
+<p>Hybridization को Touch करके पूरी प्रक्रिया देखें</p>
+</header>
+
+<div class="wrap">
+
+<h3 class="section-title">① Hybridization चुनें</h3>
+
+<div class="types" id="types"></div>
+
+<h3 class="section-title">② Example चुनें</h3>
+
+<div class="examples" id="examples"></div>
+
+<div class="panel">
+
+<h2 id="compound">CH₄ — Methane</h2>
+
+<div class="info">
+
+<div class="box">
+<div class="label">Formula</div>
+<div class="value" id="formula"></div>
+</div>
+
+<div class="box">
+<div class="label">Compound Name</div>
+<div class="value" id="name"></div>
+</div>
+
+<div class="box">
+<div class="label">Elements</div>
+<div class="value" id="elements"></div>
+</div>
+
+<div class="box">
+<div class="label">Central Atom</div>
+<div class="value" id="central"></div>
+</div>
+
+<div class="box">
+<div class="label">Hybridization</div>
+<div class="value" id="hybrid"></div>
+</div>
+
+<div class="box">
+<div class="label">Geometry</div>
+<div class="value" id="geometry"></div>
+</div>
+
+<div class="box">
+<div class="label">Bond Angle</div>
+<div class="value" id="angle"></div>
+</div>
+
+</div>
+
+
+<!-- ELECTRONIC CONFIGURATION -->
+
+<div class="config">
+
+<h3>③ इलेक्ट्रॉनिक विन्यास</h3>
+
+<div>
+<b id="elementName"></b>
+</div>
+
+<div class="config-line">
+Atomic Number: <b id="atomicNumber"></b>
+</div>
+
+<div class="config-line">
+Electronic Configuration:
+<br>
+<b id="electronic"></b>
+</div>
+
+<div class="config-line">
+Valence Configuration:
+<br>
+<b id="valence"></b>
+</div>
+
+<div class="config-line">
+Excited State:
+<br>
+<b id="excited"></b>
+</div>
+
+<div class="orbitals" id="orbitalBoxes"></div>
+
+</div>
+
+
+<!-- ANIMATION -->
+
+<div class="animation">
+
+<h3>④ संकरण बनने की Animation</h3>
+
+<div class="stage" id="stage">
+
+<div class="atom-core" id="core">
+C
+</div>
+
+</div>
+
+<div class="step" id="stepText">
+Animation शुरू हो रही है...
+</div>
+
+<div style="text-align:center">
+
+<button onclick="playAnimation()">▶ Play</button>
+
+<button onclick="pauseAnimation()">⏸ Pause</button>
+
+<button onclick="resetAnimation()">↻ Reset</button>
+
+</div>
+
+</div>
+
+
+<div class="step">
+
+<b>संकरण समीकरण:</b>
+
+<div style="font-size:20px;margin-top:7px" id="equation"></div>
+
+</div>
+
+
+<div class="note" id="note"></div>
+
+</div>
+
+</div>
+
+<footer>
+Interactive Chemistry Learning Tool
+</footer>
+
+
+<script>
+
+/* ---------------- ELEMENT DATABASE ---------------- */
+
+const elements={
+
+C:{
+ name:"Carbon (कार्बन)",
+ z:6,
+ config:"1s² 2s² 2p²",
+ valence:"2s² 2p²",
+ excited:"2s¹ 2p³"
+},
+
+B:{
+ name:"Boron (बोरॉन)",
+ z:5,
+ config:"1s² 2s² 2p¹",
+ valence:"2s² 2p¹",
+ excited:"2s¹ 2p²"
+},
+
+Be:{
+ name:"Beryllium (बेरिलियम)",
+ z:4,
+ config:"1s² 2s²",
+ valence:"2s²",
+ excited:"2s¹ 2p¹"
+},
+
+N:{
+ name:"Nitrogen (नाइट्रोजन)",
+ z:7,
+ config:"1s² 2s² 2p³",
+ valence:"2s² 2p³",
+ excited:"2s² 2p³"
+},
+
+O:{
+ name:"Oxygen (ऑक्सीजन)",
+ z:8,
+ config:"1s² 2s² 2p⁴",
+ valence:"2s² 2p⁴",
+ excited:"2s² 2p⁴"
+},
+
+F:{
+ name:"Fluorine (फ्लोरीन)",
+ z:9,
+ config:"1s² 2s² 2p⁵",
+ valence:"2s² 2p⁵",
+ excited:"2s² 2p⁵"
+},
+
+Si:{
+ name:"Silicon (सिलिकॉन)",
+ z:14,
+ config:"1s² 2s² 2p⁶ 3s² 3p²",
+ valence:"3s² 3p²",
+ excited:"3s¹ 3p³"
+},
+
+P:{
+ name:"Phosphorus (फॉस्फोरस)",
+ z:15,
+ config:"[Ne] 3s² 3p³",
+ valence:"3s² 3p³",
+ excited:"3s¹ 3p³ 3d¹"
+},
+
+S:{
+ name:"Sulfur (सल्फर)",
+ z:16,
+ config:"[Ne] 3s² 3p⁴",
+ valence:"3s² 3p⁴",
+ excited:"3s¹ 3p³ 3d²"
+},
+
+Cl:{
+ name:"Chlorine (क्लोरीन)",
+ z:17,
+ config:"[Ne] 3s² 3p⁵",
+ valence:"3s² 3p⁵",
+ excited:"3s² 3p⁵"
+},
+
+As:{
+ name:"Arsenic (आर्सेनिक)",
+ z:33,
+ config:"[Ar] 3d¹⁰ 4s² 4p³",
+ valence:"4s² 4p³",
+ excited:"4s¹ 4p³ 4d¹"
+},
+
+Xe:{
+ name:"Xenon (जेनॉन)",
+ z:54,
+ config:"[Kr] 4d¹⁰ 5s² 5p⁶",
+ valence:"5s² 5p⁶",
+ excited:"5s¹ 5p⁵ 5d²"
+},
+
+I:{
+ name:"Iodine (आयोडीन)",
+ z:53,
+ config:"[Kr] 4d¹⁰ 5s² 5p⁵",
+ valence:"5s² 5p⁵",
+ excited:"5s¹ 5p⁵ 5d²"
+},
+
+Br:{
+ name:"Bromine (ब्रोमीन)",
+ z:35,
+ config:"[Ar] 3d¹⁰ 4s² 4p⁵",
+ valence:"4s² 4p⁵",
+ excited:"4s¹ 4p⁵ 4d²"
+}
+
+};
+
+
+/* ---------------- HYBRIDIZATION DATA ---------------- */
+
+const data={
+
+"sp":{
+ geometry:"Linear",
+ angle:"180°",
+ equation:"s + p → 2 sp",
+ examples:[
+ ["BeCl₂","Beryllium chloride","Be, Cl","Be"],
+ ["CO₂","Carbon dioxide","C, O","C"],
+ ["C₂H₂","Ethyne","C, H","C"],
+ ["HCN","Hydrogen cyanide","H, C, N","C"],
+ ["BeF₂","Beryllium fluoride","Be, F","Be"],
+ ["BeBr₂","Beryllium bromide","Be, Br","Be"],
+ ["BeI₂","Beryllium iodide","Be, I","Be"],
+ ["NO₂⁺","Nitronium ion","N, O","N"],
+ ["AgCl₂⁻","Silver dichloride ion","Ag, Cl","Ag"],
+ ["C₂","Dicarbon species","C","C"]
+ ],
+ note:"sp hybridization में एक s और एक p orbital मिलकर दो sp hybrid orbitals बनाते हैं।"
+},
+
+"sp²":{
+ geometry:"Trigonal Planar",
+ angle:"120°",
+ equation:"s + 2p → 3 sp²",
+ examples:[
+ ["BF₃","Boron trifluoride","B, F","B"],
+ ["BCl₃","Boron trichloride","B, Cl","B"],
+ ["SO₃","Sulfur trioxide","S, O","S"],
+ ["NO₃⁻","Nitrate ion","N, O","N"],
+ ["CO₃²⁻","Carbonate ion","C, O","C"],
+ ["C₂H₄","Ethene","C, H","C"],
+ ["H₂CO","Methanal","H, C, O","
