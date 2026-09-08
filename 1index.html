@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Smart Document → Excel</title>
+
+<!-- OCR -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<!-- Excel -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<!-- PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs"
+        type="module"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,"Noto Sans Devanagari",sans-serif;
+    background:#eef3f8;
+    color:#172033;
+}
+
+header{
+    background:linear-gradient(135deg,#075985,#0f766e);
+    color:white;
+    text-align:center;
+    padding:22px 14px;
+}
+
+header h1{
+    margin:0;
+    font-size:25px;
+}
+
+header p{
+    margin:8px 0 0;
+}
+
+.container{
+    max-width:1250px;
+    margin:auto;
+    padding:18px;
+}
+
+.card{
+    background:#fff;
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+/* UPLOAD */
+
+.upload{
+    border:2px dashed #0f766e;
+    border-radius:15px;
+    padding:28px 15px;
+    text-align:center;
+    background:#f0fdfa;
+}
+
+.uploadIcon{
+    font-size:45px;
+}
+
+.fileButton{
+    display:inline-block;
+    background:#0f766e;
+    color:#fff;
+    padding:13px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.fileButton:active{
+    transform:scale(.97);
+}
+
+#fileInput{
+    position:absolute;
+    left:-9999px;
+}
+
+.file-list{
+    margin-top:15px;
+}
+
+.file-item{
+    padding:10px;
+    background:#f8fafc;
+    border-radius:8px;
+    margin:6px 0;
+}
+
+/* BUTTONS */
+
+button{
+    border:0;
+    border-radius:9px;
+    padding:11px 17px;
+    margin:5px 3px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.process{
+    background:#2563eb;
+    color:white;
+}
+
+.excel{
+    background:#15803d;
+    color:white;
+}
+
+.clear{
+    background:#dc2626;
+    color:white;
+}
+
+button:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* PROGRESS */
+
+.progress{
+    width:100%;
+    height:13px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:15px;
+}
+
+.progress-bar{
+    width:0;
+    height:100%;
+    background:#0f766e;
+    transition:.3s;
+}
+
+.status{
+    margin-top:10px;
+    font-weight:bold;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+}
+
+.stat{
+    background:#f8fafc;
+    padding:13px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.stat b{
+    display:block;
+    color:#0f766e;
+    font-size:23px;
+}
+
+/* SEARCH */
+
+.search{
+    width:100%;
+    padding:13px;
+    border:1px solid #cbd5e1;
+    border-radius:9px;
+    margin-bottom:12px;
+    font-size:15px;
+}
+
+/* TABLE */
+
+.table-wrap{
+    overflow:auto;
+    max-height:620px;
+    border:1px solid #dbe3ea;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    min-width:1450px;
+    border-collapse:collapse;
+}
+
+th{
+    position:sticky;
+    top:0;
+    z-index:3;
+    background:#0f766e;
+    color:white;
+    padding:10px;
+    white-space:nowrap;
+}
+
+td{
+    padding:6px;
+    border-bottom:1px solid #e5e7eb;
+    vertical-align:top;
+}
+
+td input{
+    width:100%;
+    min-width:110px;
+    padding:8px;
+    border:1px solid #cbd5e1;
+    border-radius:6px;
+}
+
+.duplicate{
+    background:#fff7ed;
+}
+
+.badge{
+    display:inline-block;
+    padding:4px 7px;
+    border-radius:6px;
+    background:#f1f5f9;
+    font-size:12px;
+}
+
+@media(max-width:800px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    header h1{
+        font-size:21px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🌾 Smart Document → Excel</h1>
+
+<p>
+Image / PDF → OCR → Automatic Data → Editable Excel
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- UPLOAD CARD -->
+
+<div class="card">
+
+<div class="upload">
+
+<div class="uploadIcon">📂</div>
+
+<h3>Documents Upload करें</h3>
+
+<p>
+एक साथ कई JPG, PNG, WEBP या PDF files चुन सकते हैं।
+</p>
+
+<input
+    id="fileInput"
+    type="file"
+    multiple
+    accept="image/*,.pdf"
+>
+
+<label
+    for="fileInput"
+    class="fileButton"
+>
+    📁 Choose Files
+</label>
+
+</div>
+
+
+<div
+    id="fileList"
+    class="file-list"
+></div>
+
+
+<div class="progress">
+
+<div
+    id="progressBar"
+    class="progress-bar"
+></div>
+
+</div>
+
+
+<div
+    id="status"
+    class="status"
+>
+कोई file selected नहीं है।
+</div>
+
+
+<div>
+
+<button
+    id="processBtn"
+    class="process"
+    disabled
+>
+🔍 Data Extract करें
+</button>
+
+<button
+    id="excelBtn"
+    class="excel"
+>
+📥 Excel Download
+</button>
+
+<button
+    id="clearBtn"
+    class="clear"
+>
+🗑️ Clear
+</button>
+
+</div>
+
+</div>
+
+
+<!-- STATS -->
+
+<div class="card">
+
+<div class="stats">
+
+<div class="stat">
+<b id="total">0</b>
+Records
+</div>
+
+<div class="stat">
+<b id="names">0</b>
+Names
+</div>
+
+<div class="stat">
+<b id="mobiles">0</b>
+Mobile
+</div>
+
+<div class="stat">
+<b id="farmerIds">0</b>
+Farmer ID
+</div>
+
+<div class="stat">
+<b id="duplicates">0</b>
+Duplicate
+</div>
+
+</div>
+
+</div>
+
+
+<!-- DATA -->
+
+<div class="card">
+
+<h3>📊 Extracted Data</h3>
+
+<input
+    id="search"
+    class="search"
+    placeholder="🔎 नाम, मोबाइल, किसान ID, ग्राम आदि search करें..."
+>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+<th>नाम</th>
+<th>पिता/पति का नाम</th>
+<th>आधार</th>
+<th>मोबाइल</th>
+<th>किसान ID</th>
+<th>ग्राम</th>
+<th>पंचायत</th>
+<th>तहसील</th>
+<th>जिला</th>
+<th>राज्य</th>
+<th>पता</th>
+<th>Source File</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script type="module">
+
+/* ==========================
+   GLOBAL DATA
+========================== */
+
+let selectedFiles=[];
+let records=[];
+
+
+/* ==========================
+   PDF.JS
+========================== */
+
+import * as pdfjsLib
+from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs";
+
+
+/* ==========================
+   ELEMENTS
+========================== */
+
+const fileInput =
+document.getElementById("fileInput");
+
+const processBtn =
+document.getElementById("processBtn");
+
+const tableBody =
+document.getElementById("tableBody");
+
+const searchBox =
+document.getElementById("search");
+
+
+/* ==========================
+   FILE SELECT
+========================== */
+
+fileInput.addEventListener(
+"change",
+()=>{
+
+    selectedFiles=
+    Array.from(fileInput.files);
+
+    showFiles();
+
+    processBtn.disabled=
+    selectedFiles.length===0;
+
+});
+
+
+function showFiles(){
+
+    const box=
+    document.getElementById("fileList");
+
+    box.innerHTML="";
+
+    selectedFiles.forEach(
+    (file,index)=>{
+
+        const div=
+        document.createElement("div");
+
+        div.className="file-item";
+
+        div.textContent=
+        "📄 "+
+        (index+1)+
+        " — "+
+        file.name;
+
+        box.appendChild(div);
+
+    });
+
+    document.getElementById(
+        "status"
+    ).textContent=
+    selectedFiles.length+
+    " file selected.";
+
+}
+
+
+/* ==========================
+   PROCESS
+========================== */
+
+processBtn.addEventListener(
+"click",
+processFiles
+);
+
+
+async function processFiles(){
+
+    records=[];
+
+    processBtn.disabled=true;
+
+    for(
+        let i=0;
+        i<selectedFiles.length;
+        i++
+    ){
+
+        const file=
+        selectedFiles[i];
+
+        setProgress(
+            Math.round(
+                i/
+                selectedFiles.length*
+                100
+            )
+        );
+
+        setStatus(
+            "Processing "+
+            (i+1)+
+            "/"+
+            selectedFiles.length+
+            ": "+
+            file.name
+        );
+
+
+        try{
+
+            let pages=[];
+
+
+            if(
+                file.type.startsWith(
+                    "image/"
+                )
+            ){
+
+                pages=[
+                    file
+                ];
+
+            }
+
+            else if(
+                file.name
+                .toLowerCase()
+                .endsWith(".pdf")
+            ){
+
+                pages=
+                await pdfToImages(file);
+
+            }
+
+
+            let combinedText="";
+
+
+            for(
+                let p=0;
+                p<pages.length;
+                p++
+            ){
+
+                setStatus(
+                    file.name+
+                    " — page "+
+                    (p+1)+
+                    "/"+
+                    pages.length
+                );
+
+
+                const text=
+                await runOCR(
+                    pages[p]
+                );
+
+                combinedText+=
+                "\n"+
+                text;
+
+            }
+
+
+            const data=
+            extractFields(
+                combinedText
+            );
+
+            data.source=
+            file.name;
+
+            records.push(data);
+
+            renderTable();
+
+        }
+        catch(error){
+
+            console.error(error);
+
+            records.push({
+
+                name:"",
+                father:"",
+                aadhaar:"",
+                mobile:"",
+                farmerId:"",
+                village:"",
+                panchayat:"",
+                tehsil:"",
+                district:"",
+                state:"",
+                address:"",
+                source:file.name
+
+            });
+
+        }
+
+    }
+
+
+    setProgress(100);
+
+    setStatus(
+        "✅ Processing complete"
+    );
+
+    processBtn.disabled=false;
+
+    updateStats();
+
+}
+
+
+/* ==========================
+   PDF → IMAGE
+========================== */
+
+async function pdfToImages(file){
+
+    const buffer=
+    await file.arrayBuffer();
+
+    const pdf=
+    await pdfjsLib.getDocument({
+        data:buffer
+    }).promise;
+
+    const images=[];
+
+
+    for(
+        let pageNo=1;
+        pageNo<=pdf.numPages;
+        pageNo++
+    ){
+
+        const page=
+        await pdf.getPage(pageNo);
+
+        const viewport=
+        page.getViewport({
+            scale:1.7
+        });
+
+        const canvas=
+        document.createElement(
+            "canvas"
+        );
+
+        canvas.width=
+        viewport.width;
+
+        canvas.height=
+        viewport.height;
+
+        const ctx=
+        canvas.getContext("2d");
+
+        await page.render({
+
+            canvasContext:ctx,
+            viewport:viewport
+
+        }).promise;
+
+
+        const blob=
+        await new Promise(
+        resolve=>
+            canvas.toBlob(
+                resolve,
+                "image/png"
+            )
+        );
+
+
+        images.push(blob);
+
+    }
+
+
+    return images;
+
+}
+
+
+/* ==========================
+   OCR
+========================== */
+
+async function runOCR(image){
+
+    const result=
+    await Tesseract.recognize(
+        image,
+        "eng",
+        {
+
+            logger:m=>{
+
+                if(
+                    m.status===
+                    "recognizing text"
+                ){
+
+                    const pct=
+                    Math.round(
+                        m.progress*100
+                    );
+
+                    setStatus(
+                        "OCR "+
+                        pct+
+                        "%"
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+    return result.data.text;
+
+}
+
+
+/* ==========================
+   FIELD EXTRACTION
+========================== */
+
+function extractFields(text){
+
+    const normalized=
+    text
+    .replace(/\r/g,"")
+    .replace(/[ \t]+/g," ")
+    .trim();
+
+
+    return {
+
+        name:
+        findLabel(
+            normalized,
+            [
+                "नाम",
+                "Name",
+                "किसान का नाम",
+                "Applicant Name"
+            ]
+        ),
+
+        father:
+        findLabel(
+            normalized,
+            [
+                "पिता का नाम",
+                "पति का नाम",
+                "Father Name",
+                "Husband Name"
+            ]
+        ),
+
+        aadhaar:
+        findAadhaar(
+            normalized
+        ),
+
+        mobile:
+        findMobile(
+            normalized
+        ),
+
+        farmerId:
+        findLabel(
+            normalized,
+            [
+                "किसान ID",
+                "किसान आईडी",
+                "Farmer ID",
+                "Kisan ID",
+                "Farmer Id"
+            ]
+        ),
+
+        village:
+        findLabel(
+            normalized,
+            [
+                "ग्राम",
+                "गांव",
+                "गाँव",
+                "Village"
+            ]
+        ),
+
+        panchayat:
+        findLabel(
+            normalized,
+            [
+                "ग्राम पंचायत",
+                "पंचायत",
+                "Panchayat"
+            ]
+        ),
+
+        tehsil:
+        findLabel(
+            normalized,
+            [
+                "तहसील",
+                "Tehsil",
+                "Tahsil"
+            ]
+        ),
+
+        district:
+        findLabel(
+            normalized,
+            [
+                "जिला",
+                "District"
+            ]
+        ),
+
+        state:
+        findLabel(
+            normalized,
+            [
+                "राज्य",
+                "State"
+            ]
+        ),
+
+        address:
+        findLabel(
+            normalized,
+            [
+                "पता",
+                "Address",
+                "स्थायी पता"
+            ]
+        )
+
+    };
+
+}
+
+
+/* ==========================
+   LABEL FINDER
+========================== */
+
+function findLabel(
+    text,
+    labels
+){
+
+    for(
+        const label of labels
+    ){
+
+        const escaped=
+        label.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&"
+        );
+
+
+        const regex=
+        new RegExp(
+            escaped+
+            "\\s*[:\\-]?\\s*([^\\n]+)",
+            "i"
+        );
+
+
+        const match=
+        text.match(regex);
+
+
+        if(match){
+
+            let value=
+            clean(
+                match[1]
+            );
+
+
+            /*
+             Avoid accidentally taking
+             another field as value.
+            */
+
+            value=
+            value
+            .replace(
+                /\s+(नाम|Name|मोबाइल|Mobile|ग्राम|Village|जिला|District)\s*:?.*$/i,
+                ""
+            );
+
+
+            return value;
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+/* ==========================
+   AADHAAR
+========================== */
+
+function findAadhaar(text){
+
+    const matches=
+    text.match(
+        /\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/g
+    );
+
+
+    if(!matches)
+        return "";
+
+
+    for(
+        const item of matches
+    ){
+
+        const digits=
+        item.replace(
+            /\D/g,
+            ""
+        );
+
+
+        if(
+            digits.length===12
+        ){
+
+            /*
+             Security:
+             don't display full Aadhaar.
+            */
+
+            return(
+                "XXXX XXXX "+
+                digits.slice(-4)
+            );
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+function findMobile(text){
+
+    const matches=
+    text.match(
+        /(?:\+91[\s-]?)?[6-9]\d{9}\b/g
+    );
+
+
+    if(!matches)
+        return "";
+
+
+    for(
+        const item of matches
+    ){
+
+        const digits=
+        item.replace(
+            /\D/g,
+            ""
+        );
+
+
+        const mobile=
+        digits.slice(-10);
+
+
+        if(
+            /^[6-9]\d{9}$/.test(
+                mobile
+            )
+        ){
+
+            return mobile;
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+/* ==========================
+   CLEAN
+========================== */
+
+function clean(value){
+
+    return String(value)
+    .replace(/\s+/g," ")
+    .replace(/^[:\-.\s]+/,"")
+    .trim()
+    .slice(0,200);
+
+}
+
+
+/* ==========================
+   TABLE
+========================== */
+
+function renderTable(){
+
+    const query=
+    searchBox.value
+    .trim()
+    .toLowerCase();
+
+
+    tableBody.innerHTML="";
+
+
+    const duplicateKeys=
+    getDuplicateKeys();
+
+
+    records.forEach(
+    (r,index)=>{
+
+        const all=
+        Object.values(r)
+        .join(" ")
+        .toLowerCase();
+
+
+        if(
+            query &&
+           
