@@ -9,298 +9,287 @@
 *{box-sizing:border-box}
 
 body{
- margin:0;
- font-family:Arial,sans-serif;
- color:white;
- background:linear-gradient(135deg,#061326,#123e62);
+margin:0;
+font-family:Arial,sans-serif;
+color:white;
+background:linear-gradient(135deg,#061326,#123e62);
 }
 
 header{
- text-align:center;
- padding:22px 12px;
+text-align:center;
+padding:22px 12px;
 }
 
 h1{margin:0;font-size:28px}
 header p{color:#b9d9ef}
 
 .wrap{
- max-width:950px;
- margin:auto;
- padding:12px;
+max-width:950px;
+margin:auto;
+padding:12px;
 }
 
-.section-title{
- margin:18px 0 10px;
-}
+.section-title{margin:18px 0 10px}
 
 .types{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:10px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
 }
 
 .type{
- padding:16px 5px;
- text-align:center;
- border-radius:16px;
- background:#ffffff12;
- border:1px solid #ffffff20;
- cursor:pointer;
- transition:.2s;
+padding:16px 5px;
+text-align:center;
+border-radius:16px;
+background:#ffffff12;
+border:1px solid #ffffff20;
+cursor:pointer;
+transition:.2s;
 }
 
-.type.active{
- background:#159bd455;
- border-color:#65d5ff;
+.type:hover,.type.active{
+background:#159bd455;
+border-color:#65d5ff;
+transform:translateY(-2px);
 }
 
 .type b{font-size:21px}
+
 .type small{
- display:block;
- margin-top:6px;
- color:#b9d9ef;
+display:block;
+margin-top:6px;
+color:#b9d9ef;
 }
 
 .examples{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:9px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:9px;
 }
 
 .ex{
- padding:13px;
- border-radius:13px;
- background:#ffffff0d;
- border:1px solid #ffffff18;
- cursor:pointer;
+padding:13px;
+border-radius:13px;
+background:#ffffff0d;
+border:1px solid #ffffff18;
+cursor:pointer;
 }
 
-.ex.active{
- border-color:#61d4ff;
- background:#168bc533;
+.ex:hover,.ex.active{
+border-color:#61d4ff;
+background:#168bc533;
 }
 
 .ex strong{font-size:18px}
+
 .ex span{
- display:block;
- margin-top:5px;
- color:#a9cde4;
- font-size:12px;
+display:block;
+margin-top:5px;
+color:#a9cde4;
+font-size:12px;
 }
 
 .panel{
- margin-top:17px;
- padding:18px;
- border-radius:20px;
- background:#ffffff10;
- border:1px solid #ffffff20;
+margin-top:17px;
+padding:18px;
+border-radius:20px;
+background:#ffffff10;
+border:1px solid #ffffff20;
 }
 
 #compound{
- text-align:center;
- margin-top:0;
+text-align:center;
+margin-top:0;
 }
 
 .info{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:9px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:9px;
 }
 
 .box{
- padding:12px;
- border-radius:12px;
- background:#00000025;
+padding:12px;
+border-radius:12px;
+background:#00000025;
 }
 
 .label{
- font-size:11px;
- color:#91bfdd;
+font-size:11px;
+color:#91bfdd;
 }
 
 .value{
- margin-top:5px;
- font-size:16px;
+margin-top:5px;
+font-size:16px;
 }
 
 .config{
- margin-top:15px;
- padding:15px;
- border-radius:15px;
- background:#020c17;
+margin-top:15px;
+padding:15px;
+border-radius:15px;
+background:#020c17;
 }
 
 .config h3{margin-top:0}
 
 .config-line{
- font-size:19px;
- letter-spacing:1px;
- padding:7px 0;
+font-size:17px;
+letter-spacing:.5px;
+padding:7px 0;
 }
 
 .orbitals{
- display:flex;
- gap:10px;
- flex-wrap:wrap;
- margin-top:10px;
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:10px;
 }
 
 .orbital{
- min-width:55px;
- padding:12px 8px;
- border:1px solid #5fcfff;
- border-radius:10px;
- text-align:center;
- background:#ffffff08;
+min-width:65px;
+padding:12px 8px;
+border:1px solid #5fcfff;
+border-radius:10px;
+text-align:center;
+background:#ffffff08;
 }
 
 .electron{
- display:inline-block;
- margin:3px;
- animation:electronPulse 1s infinite alternate;
+display:inline-block;
+margin:3px;
+animation:electronPulse 1s infinite alternate;
 }
 
 @keyframes electronPulse{
- from{transform:translateY(0)}
- to{transform:translateY(-4px)}
+from{transform:translateY(0)}
+to{transform:translateY(-4px)}
 }
 
-/* HYBRIDIZATION ANIMATION */
+/* Animation */
 
 .animation{
- margin-top:15px;
- background:#020b15;
- border-radius:18px;
- padding:15px;
- overflow:hidden;
+margin-top:15px;
+background:#020b15;
+border-radius:18px;
+padding:15px;
+overflow:hidden;
 }
 
 .stage{
- min-height:230px;
- position:relative;
- display:flex;
- align-items:center;
- justify-content:center;
+min-height:260px;
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .atom-core{
- width:62px;
- height:62px;
- border-radius:50%;
- background:#ffc34d;
- color:#111;
- display:flex;
- align-items:center;
- justify-content:center;
- font-weight:bold;
- box-shadow:0 0 25px #ffc34d;
- z-index:4;
+width:65px;
+height:65px;
+border-radius:50%;
+background:#ffc34d;
+color:#111;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+box-shadow:0 0 25px #ffc34d;
+z-index:4;
 }
 
 .orbit{
- position:absolute;
- width:75px;
- height:35px;
- border:2px solid #55d6ff;
- border-radius:50%;
- opacity:.9;
- animation:orbitFloat 2s infinite alternate ease-in-out;
+position:absolute;
+width:75px;
+height:35px;
+border:2px solid #55d6ff;
+border-radius:50%;
+opacity:.9;
+animation:orbitFloat 2s infinite alternate ease-in-out;
 }
 
 .orbit.s{
- width:70px;
- height:70px;
- border-radius:50%;
-}
-
-.orbit.p1{
- transform:rotate(90deg);
-}
-
-.orbit.p2{
- transform:rotate(0deg);
-}
-
-.orbit.p3{
- transform:rotate(45deg);
+width:70px;
+height:70px;
+border-radius:50%;
 }
 
 @keyframes orbitFloat{
- from{transform:scale(.9) rotate(0deg)}
- to{transform:scale(1.08) rotate(8deg)}
+from{transform:scale(.9) rotate(0deg)}
+to{transform:scale(1.08) rotate(8deg)}
 }
 
 .hybrid-result{
- display:flex;
- justify-content:center;
- gap:13px;
- flex-wrap:wrap;
- margin-top:10px;
+display:flex;
+justify-content:center;
+gap:13px;
+flex-wrap:wrap;
+margin-top:10px;
 }
 
 .hybrid-orbital{
- width:55px;
- height:55px;
- border-radius:50%;
- background:#55d6ff;
- color:#052033;
- display:flex;
- align-items:center;
- justify-content:center;
- font-weight:bold;
- animation:hybridAppear 1.4s infinite alternate;
+width:55px;
+height:55px;
+border-radius:50%;
+background:#55d6ff;
+color:#052033;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+animation:hybridAppear 1.4s infinite alternate;
 }
 
 @keyframes hybridAppear{
- from{transform:scale(.8);opacity:.45}
- to{transform:scale(1);opacity:1}
+from{transform:scale(.8);opacity:.45}
+to{transform:scale(1);opacity:1}
 }
 
 .step{
- margin-top:12px;
- padding:12px;
- background:#00000025;
- border-radius:12px;
- line-height:1.6;
+margin-top:12px;
+padding:12px;
+background:#00000025;
+border-radius:12px;
+line-height:1.6;
 }
 
 button{
- border:0;
- border-radius:10px;
- padding:10px 15px;
- margin:5px;
- cursor:pointer;
- font-weight:bold;
+border:0;
+border-radius:10px;
+padding:10px 15px;
+margin:5px;
+cursor:pointer;
+font-weight:bold;
 }
 
 .note{
- margin-top:14px;
- line-height:1.6;
- color:#d6ebf8;
+margin-top:14px;
+line-height:1.6;
+color:#d6ebf8;
 }
 
 footer{
- text-align:center;
- padding:20px;
- color:#83a9c2;
- font-size:12px;
+text-align:center;
+padding:20px;
+color:#83a9c2;
+font-size:12px;
 }
 
 @media(max-width:600px){
 
- .types{
-  grid-template-columns:repeat(2,1fr);
- }
+.types{
+grid-template-columns:repeat(2,1fr);
+}
 
- .examples{
-  grid-template-columns:1fr;
- }
+.examples{
+grid-template-columns:1fr;
+}
 
- .info{
-  grid-template-columns:1fr;
- }
+.info{
+grid-template-columns:1fr;
+}
 
- h1{font-size:24px}
+h1{font-size:24px}
 
 }
 </style>
@@ -366,16 +355,11 @@ footer{
 
 </div>
 
-
-<!-- ELECTRONIC CONFIGURATION -->
-
 <div class="config">
 
 <h3>③ इलेक्ट्रॉनिक विन्यास</h3>
 
-<div>
-<b id="elementName"></b>
-</div>
+<div><b id="elementName"></b></div>
 
 <div class="config-line">
 Atomic Number: <b id="atomicNumber"></b>
@@ -403,37 +387,29 @@ Excited State:
 
 </div>
 
-
-<!-- ANIMATION -->
-
 <div class="animation">
 
 <h3>④ संकरण बनने की Animation</h3>
 
 <div class="stage" id="stage">
 
-<div class="atom-core" id="core">
-C
-</div>
+<div class="atom-core" id="core">C</div>
 
 </div>
 
 <div class="step" id="stepText">
-Animation शुरू हो रही है...
+Animation शुरू करने के लिए Play दबाएँ।
 </div>
 
 <div style="text-align:center">
 
 <button onclick="playAnimation()">▶ Play</button>
-
 <button onclick="pauseAnimation()">⏸ Pause</button>
-
 <button onclick="resetAnimation()">↻ Reset</button>
 
 </div>
 
 </div>
-
 
 <div class="step">
 
@@ -442,7 +418,6 @@ Animation शुरू हो रही है...
 <div style="font-size:20px;margin-top:7px" id="equation"></div>
 
 </div>
-
 
 <div class="note" id="note"></div>
 
@@ -454,160 +429,239 @@ Animation शुरू हो रही है...
 Interactive Chemistry Learning Tool
 </footer>
 
-
 <script>
 
-/* ---------------- ELEMENT DATABASE ---------------- */
+/* ================= ELEMENT DATABASE ================= */
 
 const elements={
 
-C:{
- name:"Carbon (कार्बन)",
- z:6,
- config:"1s² 2s² 2p²",
- valence:"2s² 2p²",
- excited:"2s¹ 2p³"
+Be:{
+name:"Beryllium (बेरिलियम)",
+z:4,
+config:"1s² 2s²",
+valence:"2s²",
+excited:"2s¹ 2p¹"
 },
 
 B:{
- name:"Boron (बोरॉन)",
- z:5,
- config:"1s² 2s² 2p¹",
- valence:"2s² 2p¹",
- excited:"2s¹ 2p²"
+name:"Boron (बोरॉन)",
+z:5,
+config:"1s² 2s² 2p¹",
+valence:"2s² 2p¹",
+excited:"2s¹ 2p²"
 },
 
-Be:{
- name:"Beryllium (बेरिलियम)",
- z:4,
- config:"1s² 2s²",
- valence:"2s²",
- excited:"2s¹ 2p¹"
+C:{
+name:"Carbon (कार्बन)",
+z:6,
+config:"1s² 2s² 2p²",
+valence:"2s² 2p²",
+excited:"2s¹ 2p³"
 },
 
 N:{
- name:"Nitrogen (नाइट्रोजन)",
- z:7,
- config:"1s² 2s² 2p³",
- valence:"2s² 2p³",
- excited:"2s² 2p³"
+name:"Nitrogen (नाइट्रोजन)",
+z:7,
+config:"1s² 2s² 2p³",
+valence:"2s² 2p³",
+excited:"2s¹ 2p⁴"
 },
 
 O:{
- name:"Oxygen (ऑक्सीजन)",
- z:8,
- config:"1s² 2s² 2p⁴",
- valence:"2s² 2p⁴",
- excited:"2s² 2p⁴"
+name:"Oxygen (ऑक्सीजन)",
+z:8,
+config:"1s² 2s² 2p⁴",
+valence:"2s² 2p⁴",
+excited:"2s² 2p⁴"
 },
 
 F:{
- name:"Fluorine (फ्लोरीन)",
- z:9,
- config:"1s² 2s² 2p⁵",
- valence:"2s² 2p⁵",
- excited:"2s² 2p⁵"
+name:"Fluorine (फ्लोरीन)",
+z:9,
+config:"1s² 2s² 2p⁵",
+valence:"2s² 2p⁵",
+excited:"2s² 2p⁵"
 },
 
 Si:{
- name:"Silicon (सिलिकॉन)",
- z:14,
- config:"1s² 2s² 2p⁶ 3s² 3p²",
- valence:"3s² 3p²",
- excited:"3s¹ 3p³"
+name:"Silicon (सिलिकॉन)",
+z:14,
+config:"[Ne] 3s² 3p²",
+valence:"3s² 3p²",
+excited:"3s¹ 3p³"
 },
 
 P:{
- name:"Phosphorus (फॉस्फोरस)",
- z:15,
- config:"[Ne] 3s² 3p³",
- valence:"3s² 3p³",
- excited:"3s¹ 3p³ 3d¹"
+name:"Phosphorus (फॉस्फोरस)",
+z:15,
+config:"[Ne] 3s² 3p³",
+valence:"3s² 3p³",
+excited:"3s¹ 3p³ 3d¹"
 },
 
 S:{
- name:"Sulfur (सल्फर)",
- z:16,
- config:"[Ne] 3s² 3p⁴",
- valence:"3s² 3p⁴",
- excited:"3s¹ 3p³ 3d²"
+name:"Sulfur (सल्फर)",
+z:16,
+config:"[Ne] 3s² 3p⁴",
+valence:"3s² 3p⁴",
+excited:"3s¹ 3p³ 3d²"
 },
 
 Cl:{
- name:"Chlorine (क्लोरीन)",
- z:17,
- config:"[Ne] 3s² 3p⁵",
- valence:"3s² 3p⁵",
- excited:"3s² 3p⁵"
+name:"Chlorine (क्लोरीन)",
+z:17,
+config:"[Ne] 3s² 3p⁵",
+valence:"3s² 3p⁵",
+excited:"3s² 3p⁵"
 },
 
 As:{
- name:"Arsenic (आर्सेनिक)",
- z:33,
- config:"[Ar] 3d¹⁰ 4s² 4p³",
- valence:"4s² 4p³",
- excited:"4s¹ 4p³ 4d¹"
-},
-
-Xe:{
- name:"Xenon (जेनॉन)",
- z:54,
- config:"[Kr] 4d¹⁰ 5s² 5p⁶",
- valence:"5s² 5p⁶",
- excited:"5s¹ 5p⁵ 5d²"
-},
-
-I:{
- name:"Iodine (आयोडीन)",
- z:53,
- config:"[Kr] 4d¹⁰ 5s² 5p⁵",
- valence:"5s² 5p⁵",
- excited:"5s¹ 5p⁵ 5d²"
+name:"Arsenic (आर्सेनिक)",
+z:33,
+config:"[Ar] 3d¹⁰ 4s² 4p³",
+valence:"4s² 4p³",
+excited:"4s¹ 4p³ 4d¹"
 },
 
 Br:{
- name:"Bromine (ब्रोमीन)",
- z:35,
- config:"[Ar] 3d¹⁰ 4s² 4p⁵",
- valence:"4s² 4p⁵",
- excited:"4s¹ 4p⁵ 4d²"
+name:"Bromine (ब्रोमीन)",
+z:35,
+config:"[Ar] 3d¹⁰ 4s² 4p⁵",
+valence:"4s² 4p⁵",
+excited:"4s² 4p⁴ 4d¹"
+},
+
+I:{
+name:"Iodine (आयोडीन)",
+z:53,
+config:"[Kr] 4d¹⁰ 5s² 5p⁵",
+valence:"5s² 5p⁵",
+excited:"5s¹ 5p⁵ 5d¹"
+},
+
+Xe:{
+name:"Xenon (जेनॉन)",
+z:54,
+config:"[Kr] 4d¹⁰ 5s² 5p⁶",
+valence:"5s² 5p⁶",
+excited:"5s¹ 5p⁵ 5d²"
+},
+
+Ag:{
+name:"Silver (सिल्वर)",
+z:47,
+config:"[Kr] 4d¹⁰ 5s¹",
+valence:"4d¹⁰ 5s¹",
+excited:"4d⁹ 5s¹ 5p¹"
 }
 
 };
 
 
-/* ---------------- HYBRIDIZATION DATA ---------------- */
+/* ================= HYBRIDIZATION DATA ================= */
 
 const data={
 
 "sp":{
- geometry:"Linear",
- angle:"180°",
- equation:"s + p → 2 sp",
- examples:[
- ["BeCl₂","Beryllium chloride","Be, Cl","Be"],
- ["CO₂","Carbon dioxide","C, O","C"],
- ["C₂H₂","Ethyne","C, H","C"],
- ["HCN","Hydrogen cyanide","H, C, N","C"],
- ["BeF₂","Beryllium fluoride","Be, F","Be"],
- ["BeBr₂","Beryllium bromide","Be, Br","Be"],
- ["BeI₂","Beryllium iodide","Be, I","Be"],
- ["NO₂⁺","Nitronium ion","N, O","N"],
- ["AgCl₂⁻","Silver dichloride ion","Ag, Cl","Ag"],
- ["C₂","Dicarbon species","C","C"]
- ],
- note:"sp hybridization में एक s और एक p orbital मिलकर दो sp hybrid orbitals बनाते हैं।"
+geometry:"Linear",
+angle:"180°",
+equation:"s + p → 2 sp",
+examples:[
+["BeCl₂","Beryllium chloride","Be, Cl","Be"],
+["CO₂","Carbon dioxide","C, O","C"],
+["C₂H₂","Ethyne","C, H","C"],
+["HCN","Hydrogen cyanide","H, C, N","C"],
+["BeF₂","Beryllium fluoride","Be, F","Be"],
+["BeBr₂","Beryllium bromide","Be, Br","Be"],
+["BeI₂","Beryllium iodide","Be, I","Be"],
+["NO₂⁺","Nitronium ion","N, O","N"],
+["AgCl₂⁻","Silver dichloride ion","Ag, Cl","Ag"],
+["C₂","Dicarbon species","C","C"]
+],
+note:"sp में 1 s और 1 p orbital मिलकर 2 sp hybrid orbitals बनाते हैं। Geometry linear होती है और ideal bond angle 180° होता है।"
 },
 
 "sp²":{
- geometry:"Trigonal Planar",
- angle:"120°",
- equation:"s + 2p → 3 sp²",
- examples:[
- ["BF₃","Boron trifluoride","B, F","B"],
- ["BCl₃","Boron trichloride","B, Cl","B"],
- ["SO₃","Sulfur trioxide","S, O","S"],
- ["NO₃⁻","Nitrate ion","N, O","N"],
- ["CO₃²⁻","Carbonate ion","C, O","C"],
- ["C₂H₄","Ethene","C, H","C"],
- ["H₂CO","Methanal","H, C, O","
+geometry:"Trigonal Planar",
+angle:"120°",
+equation:"s + 2p → 3 sp²",
+examples:[
+["BF₃","Boron trifluoride","B, F","B"],
+["BCl₃","Boron trichloride","B, Cl","B"],
+["SO₃","Sulfur trioxide","S, O","S"],
+["NO₃⁻","Nitrate ion","N, O","N"],
+["CO₃²⁻","Carbonate ion","C, O","C"],
+["C₂H₄","Ethene","C, H","C"],
+["H₂CO","Methanal","H, C, O","C"],
+["SO₂","Sulfur dioxide","S, O","S"],
+["AlCl₃","Aluminium chloride","Al, Cl","Al"],
+["CH₂O","Formaldehyde","C, H, O","C"]
+],
+note:"sp² में 1 s और 2 p orbitals मिलकर 3 sp² hybrid orbitals बनाते हैं। Geometry trigonal planar और ideal angle 120° होता है।"
+},
+
+"sp³":{
+geometry:"Tetrahedral",
+angle:"109.5°",
+equation:"s + 3p → 4 sp³",
+examples:[
+["CH₄","Methane","C, H","C"],
+["NH₄⁺","Ammonium ion","N, H","N"],
+["NH₃","Ammonia","N, H","N"],
+["H₂O","Water","H, O","O"],
+["CH₃Cl","Chloromethane","C, H, Cl","C"],
+["CH₃OH","Methanol","C, H, O","C"],
+["C₂H₆","Ethane","C, H","C"],
+["SiH₄","Silane","Si, H","Si"],
+["PCl₃","Phosphorus trichloride","P, Cl","P"],
+["SiCl₄","Silicon tetrachloride","Si, Cl","Si"]
+],
+note:"sp³ में 1 s और 3 p orbitals मिलकर 4 sp³ hybrid orbitals बनाते हैं। Ideal tetrahedral angle 109.5° है। Lone pair होने पर वास्तविक angle कम हो सकता है।"
+},
+
+"sp³d":{
+geometry:"Trigonal Bipyramidal",
+angle:"90° और 120°",
+equation:"s + 3p + d → 5 sp³d",
+examples:[
+["PCl₅","Phosphorus pentachloride","P, Cl","P"],
+["PF₅","Phosphorus pentafluoride","P, F","P"],
+["PBr₅","Phosphorus pentabromide","P, Br","P"],
+["AsF₅","Arsenic pentafluoride","As, F","As"],
+["AsCl₅","Arsenic pentachloride","As, Cl","As"],
+["SbCl₅","Antimony pentachloride","Sb, Cl","Sb"],
+["PF₅","Phosphorus pentafluoride","P, F","P"],
+["PCl₅","Phosphorus pentachloride","P, Cl","P"],
+["XeF₃⁺","Xenon species","Xe, F","Xe"],
+["SF₄","Sulfur tetrafluoride","S, F","S"]
+],
+note:"Textbook hybridization model में sp³d के लिए 1 s + 3 p + 1 d orbitals का mixing माना जाता है। Geometry trigonal bipyramidal होती है।"
+},
+
+"sp³d²":{
+geometry:"Octahedral",
+angle:"90°",
+equation:"s + 3p + 2d → 6 sp³d²",
+examples:[
+["SF₆","Sulfur hexafluoride","S, F","S"],
+["PF₆⁻","Hexafluorophosphate ion","P, F","P"],
+["SiF₆²⁻","Hexafluorosilicate ion","Si, F","Si"],
+["XeF₆","Xenon hexafluoride","Xe, F","Xe"],
+["BrF₅","Bromine pentafluoride","Br, F","Br"],
+["IF₅","Iodine pentafluoride","I, F","I"],
+["SeF₆","Selenium hexafluoride","Se, F","Se"],
+["MoF₆","Molybdenum hexafluoride","Mo, F","Mo"],
+["WF₆","Tungsten hexafluoride","W, F","W"],
+["ReF₆","Rhenium hexafluoride","Re, F","Re"]
+],
+note:"Textbook model में sp³d² में 1 s + 3 p + 2 d orbitals मिलकर 6 hybrid orbitals बनाते हैं और octahedral arrangement मिलता है।"
+},
+
+"sp³d³":{
+geometry:"Pentagonal Bipyramidal",
+angle:"72°, 90° और 180°",
+equation:"s + 3p + 3d → 7 sp³d³",
+examples:[
+["IF₇","Iodine heptafluoride","I, F","I"],
+["XeF₇⁻","Xenon heptafluoride ion","Xe, F","Xe"],
+["ReF₇","Rhenium heptafluoride","Re
