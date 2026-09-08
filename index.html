@@ -2,8 +2,8 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Interactive Hybridization Lab</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hybridization Lab</title>
 
 <style>
 *{box-sizing:border-box}
@@ -11,8 +11,8 @@
 body{
 margin:0;
 font-family:Arial,sans-serif;
-color:white;
 background:linear-gradient(135deg,#061326,#123e62);
+color:#fff;
 }
 
 header{
@@ -20,7 +20,7 @@ text-align:center;
 padding:22px 12px;
 }
 
-h1{margin:0;font-size:28px}
+h1{margin:0;font-size:27px}
 header p{color:#b9d9ef}
 
 .wrap{
@@ -29,7 +29,7 @@ margin:auto;
 padding:12px;
 }
 
-.section-title{margin:18px 0 10px}
+h3{margin:18px 0 10px}
 
 .types{
 display:grid;
@@ -38,22 +38,28 @@ gap:10px;
 }
 
 .type{
-padding:16px 5px;
-text-align:center;
+padding:17px 8px;
 border-radius:16px;
+text-align:center;
 background:#ffffff12;
-border:1px solid #ffffff20;
+border:2px solid #ffffff20;
 cursor:pointer;
-transition:.2s;
+-webkit-tap-highlight-color:transparent;
+user-select:none;
 }
 
-.type:hover,.type.active{
+.type:active{
+transform:scale(.96);
+}
+
+.type.active{
 background:#159bd455;
 border-color:#65d5ff;
-transform:translateY(-2px);
 }
 
-.type b{font-size:21px}
+.type b{
+font-size:22px;
+}
 
 .type small{
 display:block;
@@ -68,37 +74,40 @@ gap:9px;
 }
 
 .ex{
-padding:13px;
+padding:14px;
 border-radius:13px;
 background:#ffffff0d;
-border:1px solid #ffffff18;
+border:2px solid #ffffff18;
 cursor:pointer;
+-webkit-tap-highlight-color:transparent;
 }
 
-.ex:hover,.ex.active{
-border-color:#61d4ff;
+.ex.active{
 background:#168bc533;
+border-color:#61d4ff;
 }
 
-.ex strong{font-size:18px}
+.ex strong{
+font-size:18px;
+}
 
 .ex span{
 display:block;
 margin-top:5px;
-color:#a9cde4;
 font-size:12px;
+color:#a9cde4;
 }
 
 .panel{
-margin-top:17px;
+margin-top:18px;
 padding:18px;
 border-radius:20px;
-background:#ffffff10;Reorder:1px solid #ffffff20;
+background:#ffffff10;
+border:1px solid #ffffff20;
 }
 
 #compound{
 text-align:center;
-margin-top:0;
 }
 
 .info{
@@ -110,7 +119,7 @@ gap:9px;
 .box{
 padding:12px;
 border-radius:12px;
-background:#00000025;
+background:#00000030;
 }
 
 .label{
@@ -124,66 +133,48 @@ font-size:16px;
 }
 
 .config{
-margin-top:15px;
+margin-top:16px;
 padding:15px;
 border-radius:15px;
 background:#020c17;
 }
 
-.config h3{margin-top:0}
-
 .config-line{
-font-size:17px;
-letter-spacing:.5px;
-padding:7px 0;
+padding:8px 0;
+line-height:1.5;
 }
 
 .orbitals{
 display:flex;
-gap:10px;
+gap:8px;
 flex-wrap:wrap;
-margin-top:10px;
 }
 
 .orbital{
-min-width:65px;
-padding:12px 8px;
-border:1px solid #5fcfff;
+padding:12px;
+border:1px solid #55d6ff;
 border-radius:10px;
+min-width:70px;
 text-align:center;
-background:#ffffff08;
 }
-
-.electron{
-display:inline-block;
-margin:3px;
-animation:electronPulse 1s infinite alternate;
-}
-
-@keyframes electronPulse{
-from{transform:translateY(0)}
-to{transform:translateY(-4px)}
-}
-
-/* Animation */
 
 .animation{
-margin-top:15px;
+margin-top:16px;
+padding:15px;
 background:#020b15;
 border-radius:18px;
-padding:15px;
-overflow:hidden;
 }
 
 .stage{
-min-height:260px;
-position:relative;
+height:250px;
 display:flex;
 align-items:center;
 justify-content:center;
+position:relative;
+overflow:hidden;
 }
 
-.atom-core{
+.atom{
 width:65px;
 height:65px;
 border-radius:50%;
@@ -193,42 +184,35 @@ display:flex;
 align-items:center;
 justify-content:center;
 font-weight:bold;
+font-size:20px;
 box-shadow:0 0 25px #ffc34d;
-z-index:4;
+z-index:3;
 }
 
 .orbit{
 position:absolute;
-width:75px;
-height:35px;
+width:100px;
+height:45px;
 border:2px solid #55d6ff;
 border-radius:50%;
-opacity:.9;
-animation:orbitFloat 2s infinite alternate ease-in-out;
+animation:float 1.5s infinite alternate;
 }
 
-.orbit.s{
-width:70px;
-height:70px;
-border-radius:50%;
+@keyframes float{
+from{transform:scale(.8) rotate(0deg)}
+to{transform:scale(1.1) rotate(15deg)}
 }
 
-@keyframes orbitFloat{
-from{transform:scale(.9) rotate(0deg)}
-to{transform:scale(1.08) rotate(8deg)}
-}
-
-.hybrid-result{
+.hybrids{
 display:flex;
-justify-content:center;
-gap:13px;
+gap:9px;
 flex-wrap:wrap;
-margin-top:10px;
+justify-content:center;
 }
 
-.hybrid-orbital{
-width:55px;
-height:55px;
+.hybrid{
+width:58px;
+height:58px;
 border-radius:50%;
 background:#55d6ff;
 color:#052033;
@@ -236,29 +220,29 @@ display:flex;
 align-items:center;
 justify-content:center;
 font-weight:bold;
-animation:hybridAppear 1.4s infinite alternate;
+animation:pulse 1s infinite alternate;
 }
 
-@keyframes hybridAppear{
-from{transform:scale(.8);opacity:.45}
-to{transform:scale(1);opacity:1}
+@keyframes pulse{
+from{transform:scale(.8)}
+to{transform:scale(1)}
 }
 
 .step{
 margin-top:12px;
 padding:12px;
-background:#00000025;
 border-radius:12px;
+background:#00000030;
 line-height:1.6;
 }
 
 button{
 border:0;
 border-radius:10px;
-padding:10px 15px;
+padding:11px 16px;
 margin:5px;
-cursor:pointer;
 font-weight:bold;
+cursor:pointer;
 }
 
 .note{
@@ -275,21 +259,10 @@ font-size:12px;
 }
 
 @media(max-width:600px){
-
-.types{
-grid-template-columns:repeat(2,1fr);
-}
-
-.examples{
-grid-template-columns:1fr;
-}
-
-.info{
-grid-template-columns:1fr;
-}
-
-h1{font-size:24px}
-
+.types{grid-template-columns:repeat(2,1fr)}
+.examples{grid-template-columns:1fr}
+.info{grid-template-columns:1fr}
+h1{font-size:23px}
 }
 </style>
 </head>
@@ -298,22 +271,55 @@ h1{font-size:24px}
 
 <header>
 <h1>🧪 Interactive Hybridization Lab</h1>
-<p>Hybridization को Touch करके पूरी प्रक्रिया देखें</p>
+<p>Hybridization पर Touch करके पूरी जानकारी देखें</p>
 </header>
 
 <div class="wrap">
 
-<h3 class="section-title">① Hybridization चुनें</h3>
+<h3>① Hybridization चुनें</h3>
 
-<div class="types" id="types"></div>
+<!-- BUTTONS DIRECTLY IN HTML -->
+<div class="types">
 
-<h3 class="section-title">② Example चुनें</h3>
+<div class="type active" data-type="sp">
+<b>sp</b>
+<small>Linear • 180°</small>
+</div>
+
+<div class="type" data-type="sp2">
+<b>sp²</b>
+<small>Trigonal Planar • 120°</small>
+</div>
+
+<div class="type" data-type="sp3">
+<b>sp³</b>
+<small>Tetrahedral • 109.5°</small>
+</div>
+
+<div class="type" data-type="sp3d">
+<b>sp³d</b>
+<small>Trigonal Bipyramidal</small>
+</div>
+
+<div class="type" data-type="sp3d2">
+<b>sp³d²</b>
+<small>Octahedral • 90°</small>
+</div>
+
+<div class="type" data-type="sp3d3">
+<b>sp³d³</b>
+<small>Pentagonal Bipyramidal</small>
+</div>
+
+</div>
+
+<h3>② Example चुनें</h3>
 
 <div class="examples" id="examples"></div>
 
 <div class="panel">
 
-<h2 id="compound">CH₄ — Methane</h2>
+<h2 id="compound">BeCl₂ — Beryllium chloride</h2>
 
 <div class="info">
 
@@ -358,10 +364,13 @@ h1{font-size:24px}
 
 <h3>③ इलेक्ट्रॉनिक विन्यास</h3>
 
-<div><b id="elementName"></b></div>
+<div class="config-line">
+<b id="elementName"></b>
+</div>
 
 <div class="config-line">
-Atomic Number: <b id="atomicNumber"></b>
+Atomic Number:
+<b id="atomicNumber"></b>
 </div>
 
 <div class="config-line">
@@ -382,7 +391,7 @@ Excited State:
 <b id="excited"></b>
 </div>
 
-<div class="orbitals" id="orbitalBoxes"></div>
+<div class="orbitals" id="orbitals"></div>
 
 </div>
 
@@ -391,31 +400,24 @@ Excited State:
 <h3>④ संकरण बनने की Animation</h3>
 
 <div class="stage" id="stage">
-
-<div class="atom-core" id="core">C</div>
-
+<div class="atom" id="atom">Be</div>
 </div>
 
-<div class="step" id="stepText">
-Animation शुरू करने के लिए Play दबाएँ।
+<div class="step" id="step">
+Play दबाकर संकरण की प्रक्रिया देखें।
 </div>
 
 <div style="text-align:center">
-
-<button onclick="playAnimation()">▶ Play</button>
-<button onclick="pauseAnimation()">⏸ Pause</button>
-<button onclick="resetAnimation()">↻ Reset</button>
-
+<button id="play">▶ Play</button>
+<button id="pause">⏸ Pause</button>
+<button id="reset">↻ Reset</button>
 </div>
 
 </div>
 
 <div class="step">
-
 <b>संकरण समीकरण:</b>
-
-<div style="font-size:20px;margin-top:7px" id="equation"></div>
-
+<div id="equation" style="font-size:20px;margin-top:7px"></div>
 </div>
 
 <div class="note" id="note"></div>
@@ -428,144 +430,19 @@ Animation शुरू करने के लिए Play दबाएँ।
 Interactive Chemistry Learning Tool
 </footer>
 
+
 <script>
 
-/* ================= ELEMENT DATABASE ================= */
+/* DATA */
 
-const elements={
+const D={
 
-Be:{
-name:"Beryllium (बेरिलियम)",
-z:4,
-config:"1s² 2s²",
-valence:"2s²",
-excited:"2s¹ 2p¹"
-},
-
-B:{
-name:"Boron (बोरॉन)",
-z:5,
-config:"1s² 2s² 2p¹",
-valence:"2s² 2p¹",
-excited:"2s¹ 2p²"
-},
-
-C:{
-name:"Carbon (कार्बन)",
-z:6,
-config:"1s² 2s² 2p²",
-valence:"2s² 2p²",
-excited:"2s¹ 2p³"
-},
-
-N:{
-name:"Nitrogen (नाइट्रोजन)",
-z:7,
-config:"1s² 2s² 2p³",
-valence:"2s² 2p³",
-excited:"2s¹ 2p⁴"
-},
-
-O:{
-name:"Oxygen (ऑक्सीजन)",
-z:8,
-config:"1s² 2s² 2p⁴",
-valence:"2s² 2p⁴",
-excited:"2s² 2p⁴"
-},
-
-F:{
-name:"Fluorine (फ्लोरीन)",
-z:9,
-config:"1s² 2s² 2p⁵",
-valence:"2s² 2p⁵",
-excited:"2s² 2p⁵"
-},
-
-Si:{
-name:"Silicon (सिलिकॉन)",
-z:14,
-config:"[Ne] 3s² 3p²",
-valence:"3s² 3p²",
-excited:"3s¹ 3p³"
-},
-
-P:{
-name:"Phosphorus (फॉस्फोरस)",
-z:15,
-config:"[Ne] 3s² 3p³",
-valence:"3s² 3p³",
-excited:"3s¹ 3p³ 3d¹"
-},
-
-S:{
-name:"Sulfur (सल्फर)",
-z:16,
-config:"[Ne] 3s² 3p⁴",
-valence:"3s² 3p⁴",
-excited:"3s¹ 3p³ 3d²"
-},
-
-Cl:{
-name:"Chlorine (क्लोरीन)",
-z:17,
-config:"[Ne] 3s² 3p⁵",
-valence:"3s² 3p⁵",
-excited:"3s² 3p⁵"
-},
-
-As:{
-name:"Arsenic (आर्सेनिक)",
-z:33,
-config:"[Ar] 3d¹⁰ 4s² 4p³",
-valence:"4s² 4p³",
-excited:"4s¹ 4p³ 4d¹"
-},
-
-Br:{
-name:"Bromine (ब्रोमीन)",
-z:35,
-config:"[Ar] 3d¹⁰ 4s² 4p⁵",
-valence:"4s² 4p⁵",
-excited:"4s² 4p⁴ 4d¹"
-},
-
-I:{
-name:"Iodine (आयोडीन)",
-z:53,
-config:"[Kr] 4d¹⁰ 5s² 5p⁵",
-valence:"5s² 5p⁵",
-excited:"5s¹ 5p⁵ 5d¹"
-},
-
-Xe:{
-name:"Xenon (जेनॉन)",
-z:54,
-config:"[Kr] 4d¹⁰ 5s² 5p⁶",
-valence:"5s² 5p⁶",
-excited:"5s¹ 5p⁵ 5d²"
-},
-
-Ag:{
-name:"Silver (सिल्वर)",
-z:47,
-config:"[Kr] 4d¹⁰ 5s¹",
-valence:"4d¹⁰ 5s¹",
-excited:"4d⁹ 5s¹ 5p¹"
-}
-
-};
-
-
-/* ================= HYBRIDIZATION DATA ================= */
-
-const data={
-
-"sp":{
-geometry:"Linear",
+sp:{
+geo:"Linear",
 angle:"180°",
-equation:"s + p → 2 sp",
-examples:[
+eq:"s + p → 2 sp",
+note:"1 s और 1 p orbital मिलकर 2 sp hybrid orbitals बनाते हैं।",
+ex:[
 ["BeCl₂","Beryllium chloride","Be, Cl","Be"],
 ["CO₂","Carbon dioxide","C, O","C"],
 ["C₂H₂","Ethyne","C, H","C"],
@@ -576,15 +453,14 @@ examples:[
 ["NO₂⁺","Nitronium ion","N, O","N"],
 ["AgCl₂⁻","Silver dichloride ion","Ag, Cl","Ag"],
 ["C₂","Dicarbon species","C","C"]
-],
-note:"sp में 1 s और 1 p orbital मिलकर 2 sp hybrid orbitals बनाते हैं। Geometry linear होती है और ideal bond angle 180° होता है।"
-},
+]},
 
-"sp²":{
-geometry:"Trigonal Planar",
+sp2:{
+geo:"Trigonal Planar",
 angle:"120°",
-equation:"s + 2p → 3 sp²",
-examples:[
+eq:"s + 2p → 3 sp²",
+note:"1 s और 2 p orbitals मिलकर 3 sp² hybrid orbitals बनाते हैं।",
+ex:[
 ["BF₃","Boron trifluoride","B, F","B"],
 ["BCl₃","Boron trichloride","B, Cl","B"],
 ["SO₃","Sulfur trioxide","S, O","S"],
@@ -593,17 +469,16 @@ examples:[
 ["C₂H₄","Ethene","C, H","C"],
 ["H₂CO","Methanal","H, C, O","C"],
 ["SO₂","Sulfur dioxide","S, O","S"],
-["AlCl₃","Aluminium chloride","Al, Cl","Al"],
-["CH₂O","Formaldehyde","C, H, O","C"]
-],
-note:"sp² में 1 s और 2 p orbitals मिलकर 3 sp² hybrid orbitals बनाते हैं। Geometry trigonal planar और ideal angle 120° होता है।"
-},
+["CH₂O","Formaldehyde","C, H, O","C"],
+["C₆H₆","Benzene","C, H","C"]
+]},
 
-"sp³":{
-geometry:"Tetrahedral",
+sp3:{
+geo:"Tetrahedral",
 angle:"109.5°",
-equation:"s + 3p → 4 sp³",
-examples:[
+eq:"s + 3p → 4 sp³",
+note:"1 s और 3 p orbitals मिलकर 4 sp³ hybrid orbitals बनाते हैं।",
+ex:[
 ["CH₄","Methane","C, H","C"],
 ["NH₄⁺","Ammonium ion","N, H","N"],
 ["NH₃","Ammonia","N, H","N"],
@@ -614,37 +489,35 @@ examples:[
 ["SiH₄","Silane","Si, H","Si"],
 ["PCl₃","Phosphorus trichloride","P, Cl","P"],
 ["SiCl₄","Silicon tetrachloride","Si, Cl","Si"]
-],
-note:"sp³ में 1 s और 3 p orbitals मिलकर 4 sp³ hybrid orbitals बनाते हैं। Ideal tetrahedral angle 109.5° है। Lone pair होने पर वास्तविक angle कम हो सकता है।"
-},
+]},
 
-"sp³d":{
-geometry:"Trigonal Bipyramidal",
-angle:"90° और 120°",
-equation:"s + 3p + d → 5 sp³d",
-examples:[
+sp3d:{
+geo:"Trigonal Bipyramidal",
+angle:"90° / 120°",
+eq:"s + 3p + d → 5 sp³d",
+note:"Textbook model में s, p और d orbitals के mixing से 5 hybrid orbitals का model बनाया जाता है।",
+ex:[
 ["PCl₅","Phosphorus pentachloride","P, Cl","P"],
 ["PF₅","Phosphorus pentafluoride","P, F","P"],
 ["PBr₅","Phosphorus pentabromide","P, Br","P"],
 ["AsF₅","Arsenic pentafluoride","As, F","As"],
 ["AsCl₅","Arsenic pentachloride","As, Cl","As"],
 ["SbCl₅","Antimony pentachloride","Sb, Cl","Sb"],
-["PF₅","Phosphorus pentafluoride","P, F","P"],
+["SF₄","Sulfur tetrafluoride","S, F","S"],
 ["PCl₅","Phosphorus pentachloride","P, Cl","P"],
-["XeF₃⁺","Xenon species","Xe, F","Xe"],
-["SF₄","Sulfur tetrafluoride","S, F","S"]
-],
-note:"Textbook hybridization model में sp³d के लिए 1 s + 3 p + 1 d orbitals का mixing माना जाता है। Geometry trigonal bipyramidal होती है।"
-},
+["PF₅","Phosphorus pentafluoride","P, F","P"],
+["AsF₅","Arsenic pentafluoride","As, F","As"]
+]},
 
-"sp³d²":{
-geometry:"Octahedral",
+sp3d2:{
+geo:"Octahedral",
 angle:"90°",
-equation:"s + 3p + 2d → 6 sp³d²",
-examples:[
+eq:"s + 3p + 2d → 6 sp³d²",
+note:"Textbook model में 6 hybrid orbitals octahedral arrangement में दिखाए जाते हैं।",
+ex:[
 ["SF₆","Sulfur hexafluoride","S, F","S"],
-["PF₆⁻","Hexafluorophosphate ion","P, F","P"],
-["SiF₆²⁻","Hexafluorosilicate ion","Si, F","Si"],
+["PF₆⁻","Hexafluorophosphate","P, F","P"],
+["SiF₆²⁻","Hexafluorosilicate","Si, F","Si"],
 ["XeF₆","Xenon hexafluoride","Xe, F","Xe"],
 ["BrF₅","Bromine pentafluoride","Br, F","Br"],
 ["IF₅","Iodine pentafluoride","I, F","I"],
@@ -652,15 +525,291 @@ examples:[
 ["MoF₆","Molybdenum hexafluoride","Mo, F","Mo"],
 ["WF₆","Tungsten hexafluoride","W, F","W"],
 ["ReF₆","Rhenium hexafluoride","Re, F","Re"]
-],
-note:"Textbook model में sp³d² में 1 s + 3 p + 2 d orbitals मिलकर 6 hybrid orbitals बनाते हैं और octahedral arrangement मिलता है।"
-},
+]},
 
-"sp³d³":{
-geometry:"Pentagonal Bipyramidal",
-angle:"72°, 90° और 180°",
-equation:"s + 3p + 3d → 7 sp³d³",
-examples:[
+sp3d3:{
+geo:"Pentagonal Bipyramidal",
+angle:"72° / 90° / 180°",
+eq:"s + 3p + 3d → 7 sp³d³",
+note:"Textbook hybridization model में 7 hybrid orbitals pentagonal bipyramidal arrangement से जोड़े जाते हैं।",
+ex:[
 ["IF₇","Iodine heptafluoride","I, F","I"],
-["XeF₇⁻","Xenon heptafluoride ion","Xe, F","Xe"],
-["ReF₇","Rhenium heptafluoride","Re
+["ReF₇","Rhenium heptafluoride","Re, F","Re"],
+["XeF₇⁻","Xenon fluoride ion","Xe, F","Xe"],
+["WF₇⁻","Tungsten fluoride ion","W, F","W"],
+["MoF₇⁻","Molybdenum fluoride ion","Mo, F","Mo"],
+["TaF₇²⁻","Tantalum fluoride ion","Ta, F","Ta"],
+["NbF₇²⁻","Niobium fluoride ion","Nb, F","Nb"],
+["OsF₇⁻","Osmium fluoride ion","Os, F","Os"],
+["TcF₇⁻","Technetium fluoride ion","Tc, F","Tc"],
+["ZrF₇³⁻","Zirconium fluoride ion","Zr, F","Zr"]
+]}
+
+};
+
+
+/* ELEMENT DATA */
+
+const E={
+
+Be:["Beryllium (Be)",4,"1s² 2s²","2s²","2s¹ 2p¹"],
+B:["Boron (B)",5,"1s² 2s² 2p¹","2s² 2p¹","2s¹ 2p²"],
+C:["Carbon (C)",6,"1s² 2s² 2p²","2s² 2p²","2s¹ 2p³"],
+N:["Nitrogen (N)",7,"1s² 2s² 2p³","2s² 2p³","2s¹ 2p⁴"],
+O:["Oxygen (O)",8,"1s² 2s² 2p⁴","2s² 2p⁴","2s² 2p⁴"],
+F:["Fluorine (F)",9,"1s² 2s² 2p⁵","2s² 2p⁵","2s² 2p⁵"],
+Si:["Silicon (Si)",14,"[Ne] 3s² 3p²","3s² 3p²","3s¹ 3p³"],
+P:["Phosphorus (P)",15,"[Ne] 3s² 3p³","3s² 3p³","3s¹ 3p³ 3d¹"],
+S:["Sulfur (S)",16,"[Ne] 3s² 3p⁴","3s² 3p⁴","3s¹ 3p³ 3d²"],
+Cl:["Chlorine (Cl)",17,"[Ne] 3s² 3p⁵","3s² 3p⁵","3s² 3p⁵"],
+As:["Arsenic (As)",33,"[Ar] 3d¹⁰ 4s² 4p³","4s² 4p³","4s¹ 4p³ 4d¹"],
+Br:["Bromine (Br)",35,"[Ar] 3d¹⁰ 4s² 4p⁵","4s² 4p⁵","4s¹ 4p⁵ 4d¹"],
+I:["Iodine (I)",53,"[Kr] 4d¹⁰ 5s² 5p⁵","5s² 5p⁵","5s¹ 5p⁵ 5d¹"],
+Xe:["Xenon (Xe)",54,"[Kr] 4d¹⁰ 5s² 5p⁶","5s² 5p⁶","5s¹ 5p⁵ 5d¹"]
+};
+
+
+/* CURRENT */
+
+let current="sp";
+let index=0;
+let timer=null;
+
+
+/* EXAMPLES */
+
+function examples(){
+
+let box=document.getElementById("examples");
+
+box.innerHTML="";
+
+D[current].ex.forEach((x,i)=>{
+
+let el=document.createElement("div");
+
+el.className="ex"+(i===index?" active":"");
+
+el.innerHTML=
+"<strong>"+x[0]+"</strong>"+
+"<span>"+x[1]+"</span>";
+
+el.addEventListener("click",function(){
+
+index=i;
+
+examples();
+show();
+reset();
+
+});
+
+box.appendChild(el);
+
+});
+
+}
+
+
+/* SHOW DATA */
+
+function show(){
+
+let x=D[current].ex[index];
+
+document.getElementById("compound").innerText=
+x[0]+" — "+x[1];
+
+document.getElementById("formula").innerText=x[0];
+document.getElementById("name").innerText=x[1];
+document.getElementById("elements").innerText=x[2];
+document.getElementById("central").innerText=x[3];
+document.getElementById("hybrid").innerText=
+current.replace("sp2","sp²")
+.replace("sp3d3","sp³d³")
+.replace("sp3d2","sp³d²")
+.replace("sp3d","sp³d")
+.replace("sp3","sp³");
+
+document.getElementById("geometry").innerText=D[current].geo;
+document.getElementById("angle").innerText=D[current].angle;
+document.getElementById("equation").innerText=D[current].eq;
+document.getElementById("note").innerText=D[current].note;
+
+let e=E[x[3]];
+
+if(e){
+
+document.getElementById("elementName").innerText=e[0];
+document.getElementById("atomicNumber").innerText=e[1];
+document.getElementById("electronic").innerText=e[2];
+document.getElementById("valence").innerText=e[3];
+document.getElementById("excited").innerText=e[4];
+
+}
+
+document.getElementById("atom").innerText=x[3];
+
+}
+
+
+/* TYPE TOUCH */
+
+document.querySelectorAll(".type").forEach(btn=>{
+
+btn.addEventListener("click",function(){
+
+document.querySelectorAll(".type")
+.forEach(b=>b.classList.remove("active"));
+
+this.classList.add("active");
+
+current=this.dataset.type;
+index=0;
+
+examples();
+show();
+reset();
+
+});
+
+});
+
+
+/* ANIMATION */
+
+function reset(){
+
+clearInterval(timer);
+
+document.getElementById("stage").innerHTML=
+'<div class="atom" id="atom">'+
+D[current].ex[index][3]+
+'</div>';
+
+document.getElementById("step").innerText=
+"Play दबाकर संकरण की प्रक्रिया देखें।";
+
+}
+
+
+function play(){
+
+clearInterval(timer);
+
+let count=0;
+
+let stages=[
+"Step 1: Ground State — मूल अवस्था।",
+"Step 2: Excitation — electron promotion।",
+"Step 3: Orbital Mixing — orbitals mix हो रहे हैं।",
+"Step 4: Hybrid Orbitals — नए hybrid orbitals बन रहे हैं।",
+"Step 5: Geometry — final arrangement।"
+];
+
+function run(){
+
+document.getElementById("step").innerText=
+stages[count];
+
+let stage=document.getElementById("stage");
+
+stage.innerHTML="";
+
+let atom=document.createElement("div");
+atom.className="atom";
+atom.innerText=D[current].ex[index][3];
+
+stage.appendChild(atom);
+
+if(count<3){
+
+for(let i=0;i<count+2;i++){
+
+let o=document.createElement("div");
+o.className="orbit";
+o.style.transform=
+"rotate("+(i*45)+"deg)";
+
+stage.appendChild(o);
+
+}
+
+}else{
+
+let h=document.createElement("div");
+h.className="hybrids";
+
+let n={
+sp:2,
+sp2:3,
+sp3:4,
+sp3d:5,
+sp3d2:6,
+sp3d3:7
+}[current];
+
+for(let i=0;i<n;i++){
+
+let orb=document.createElement("div");
+orb.className="hybrid";
+orb.innerText=
+current.replace("sp2","sp²")
+.replace("sp3d3","sp³d³")
+.replace("sp3d2","sp³d²")
+.replace("sp3d","sp³d")
+.replace("sp3","sp³");
+
+h.appendChild(orb);
+
+}
+
+stage.appendChild(h);
+
+}
+
+}
+
+run();
+
+timer=setInterval(()=>{
+
+count++;
+
+if(count>4){
+
+clearInterval(timer);
+count=4;
+return;
+
+}
+
+run();
+
+},1500);
+
+}
+
+
+document.getElementById("play")
+.addEventListener("click",play);
+
+document.getElementById("pause")
+.addEventListener("click",function(){
+clearInterval(timer);
+});
+
+document.getElementById("reset")
+.addEventListener("click",reset);
+
+
+/* START */
+
+examples();
+show();
+reset();
+
+</script>
+
+</body>
+</html>
