@@ -3,101 +3,136 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CryptoPay</title>
+  <title>PayNex Pro - UPI & Crypto Wealth</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0b0f19;
+      background: #090d16;
       color: #0f172a;
     }
     .app {
       max-width: 430px;
       min-height: 100vh;
       margin: auto;
-      background: #ffffff;
+      background: #f8fafc;
       position: relative;
-      padding-bottom: 80px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      padding-bottom: 75px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
     header {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: linear-gradient(135deg, #4f46e5 0%, #1e1b4b 100%);
       color: white;
-      padding: 24px 20px;
+      padding: 18px 16px 22px;
       border-radius: 0 0 24px 24px;
     }
-    .logo-row { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 22px; font-weight: 800; }
-    .api-status {
+    .top-bar { display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .user-pill {
       font-size: 11px;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 20px;
-      background: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.18);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
+      cursor: pointer;
     }
-    .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; }
-    .small { font-size: 13px; opacity: 0.75; margin-top: 4px; }
-    .balance { margin-top: 18px; font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
-    .page { display: none; padding: 18px; }
+    .wallet-summary {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      background: rgba(255,255,255,0.1);
+      padding: 12px;
+      border-radius: 16px;
+    }
+    .wallet-col small { font-size: 11px; opacity: 0.8; display: block; }
+    .wallet-col b { font-size: 18px; letter-spacing: -0.5px; }
+    .page { display: none; padding: 16px; }
     .page.active { display: block; }
-    .card {
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 18px 0 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .service-btn {
       background: #fff;
       border: 1px solid #e2e8f0;
       border-radius: 16px;
-      padding: 16px;
-      margin: 14px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
-    .action {
-      padding: 16px 10px;
-      border: 0;
-      border-radius: 14px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      font-size: 14px;
-      font-weight: 600;
+      padding: 12px 6px;
+      text-align: center;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #334155;
     }
-    .action:active { background: #e2e8f0; }
-    .coin {
+    .service-btn:active { background: #f1f5f9; }
+    .icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+    .bg-purple { background: #ede9fe; color: #6d28d9; }
+    .bg-blue { background: #e0f2fe; color: #0284c7; }
+    .bg-amber { background: #fef3c7; color: #d97706; }
+    .bg-emerald { background: #d1fae5; color: #059669; }
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 14px;
+      margin: 10px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+    .coin-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 0;
+      padding: 12px 0;
       border-bottom: 1px solid #f1f5f9;
       cursor: pointer;
     }
-    .coin:last-child { border: 0; }
-    .coinIcon {
-      width: 40px;
-      height: 40px;
+    .coin-row:last-child { border: 0; }
+    .coin-symbol-box {
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: #0f172a;
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
+      font-weight: 700;
+      font-size: 14px;
+      margin-right: 10px;
     }
-    .coinInfo { flex: 1; margin-left: 12px; }
     .green { color: #16a34a; font-weight: 600; }
     .red { color: #dc2626; font-weight: 600; }
-    label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-top: 10px; }
+    label { font-size: 12px; font-weight: 600; color: #475569; display: block; margin-top: 8px; }
     input, select {
       width: 100%;
-      padding: 13px;
+      padding: 12px;
       border: 1px solid #cbd5e1;
       border-radius: 12px;
-      margin: 6px 0 12px;
-      font-size: 15px;
+      margin: 5px 0 10px;
+      font-size: 14px;
       background: #fff;
     }
     button.primary {
@@ -105,7 +140,7 @@
       padding: 14px;
       border: 0;
       border-radius: 12px;
-      background: #0f172a;
+      background: #4f46e5;
       color: white;
       font-size: 15px;
       font-weight: 700;
@@ -114,13 +149,13 @@
     }
     button.secondary {
       width: 100%;
-      padding: 12px;
+      padding: 11px;
       border: 1px solid #cbd5e1;
       border-radius: 12px;
       background: white;
-      color: #0f172a;
+      color: #1e293b;
       font-weight: 600;
-      margin-top: 10px;
+      font-size: 13px;
       cursor: pointer;
     }
     .bottom {
@@ -128,7 +163,7 @@
       bottom: 0;
       width: 100%;
       max-width: 430px;
-      height: 65px;
+      height: 62px;
       background: white;
       border-top: 1px solid #e2e8f0;
       display: flex;
@@ -137,203 +172,231 @@
       z-index: 10;
     }
     .nav { border: 0; background: none; font-size: 11px; cursor: pointer; color: #64748b; }
-    .nav b { display: block; font-size: 18px; margin-bottom: 2px; }
-    .qr {
-      width: 180px;
-      height: 180px;
-      margin: 16px auto;
-      background: repeating-linear-gradient(45deg, #0f172a 0 4px, #fff 4px 8px);
-      border: 10px solid white;
-      box-shadow: 0 0 0 1px #cbd5e1;
-    }
-    .success { text-align: center; padding: 25px 10px; }
-    .successIcon {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: #16a34a;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 36px;
-    }
-    .security {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #f1f5f9;
-    }
+    .nav b { display: block; font-size: 19px; margin-bottom: 2px; }
     .badge {
-      padding: 4px 8px;
-      border-radius: 12px;
-      background: #dcfce7;
-      color: #15803d;
+      padding: 3px 8px;
+      border-radius: 20px;
       font-size: 11px;
       font-weight: 700;
+      background: #dcfce7;
+      color: #15803d;
     }
-    .loader {
-      width: 44px;
-      height: 44px;
-      border: 4px solid #e2e8f0;
-      border-top: 4px solid #0f172a;
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-      margin: 30px auto;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .badge-gold { background: #fef3c7; color: #b45309; }
     .historyItem {
-      padding: 12px 0;
+      padding: 10px 0;
       border-bottom: 1px solid #f1f5f9;
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
+    .loader {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e2e8f0;
+      border-top: 3px solid #4f46e5;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 25px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .qr {
+      width: 160px;
+      height: 160px;
+      margin: 14px auto;
+      background: repeating-linear-gradient(45deg, #0f172a 0 4px, #fff 4px 8px);
+      border: 6px solid white;
+      box-shadow: 0 0 0 1px #cbd5e1;
     }
   </style>
 </head>
 <body>
   <div class="app">
+    <!-- APP HEADER -->
     <header>
-      <div class="logo-row">
-        <div class="logo">₿ CryptoPay</div>
-        <div class="api-status">
-          <span class="dot" id="apiDot"></span>
-          <span id="apiStatusText">Live Feed</span>
+      <div class="top-bar">
+        <div class="brand">⚡ PayNex Pro</div>
+        <div class="user-pill" onclick="show('profile')">
+          <span style="width:7px; height:7px; border-radius:50%; background:#22c55e;"></span>
+          <span id="headerUserName">Kamal</span>
         </div>
       </div>
-      <div class="small">Live Crypto-to-INR Payment Gateway</div>
-      <div class="balance" id="headerBalance">₹24,850.00</div>
-      <div class="small">Available Wallet Balance</div>
+      <div class="wallet-summary">
+        <div class="wallet-col">
+          <small>INR Bank / UPI</small>
+          <b id="inrBalanceText">₹48,250.00</b>
+        </div>
+        <div class="wallet-col" style="border-left: 1px solid rgba(255,255,255,0.2); padding-left:12px;">
+          <small>Mudrex Crypto Value</small>
+          <b id="cryptoValText">₹12,400.00</b>
+        </div>
+      </div>
     </header>
 
-    <!-- HOME -->
+    <!-- TAB 1: PHONEPE HOME (UPI & BILLS) -->
     <section id="home" class="page active">
-      <h2 style="margin: 0 0 10px;">Good Morning 👋</h2>
-      <div class="grid">
-        <button class="action" onclick="show('send')"><span>💸</span> Send</button>
-        <button class="action" onclick="show('scan')"><span>📷</span> Scan & Pay</button>
-        <button class="action" onclick="show('receive')"><span>📥</span> Receive</button>
-        <button class="action" onclick="show('crypto')"><span>🪙</span> All Crypto</button>
+      <div class="section-title">Transfer Money</div>
+      <div class="grid-4">
+        <div class="service-btn" onclick="openTransferModal('To Mobile')">
+          <div class="icon-box bg-purple">📱</div>
+          To Mobile
+        </div>
+        <div class="service-btn" onclick="openTransferModal('To Bank/UPI')">
+          <div class="icon-box bg-blue">🏦</div>
+          To Bank / UPI
+        </div>
+        <div class="service-btn" onclick="show('receive')">
+          <div class="icon-box bg-emerald">📥</div>
+          Receive QR
+        </div>
+        <div class="service-btn" onclick="openTransferModal('Check Balance')">
+          <div class="icon-box bg-amber">📊</div>
+          Check Balance
+        </div>
       </div>
 
-      <div class="card">
-        <b>🛡️ Security Center</b>
-        <p class="small" style="margin: 4px 0 10px;">PIN verification active</p>
-        <span class="badge">SECURED</span>
-        <button class="secondary" onclick="show('security')">View Security Settings</button>
+      <div class="section-title">Recharge & Pay Bills</div>
+      <div class="grid-4">
+        <div class="service-btn" onclick="openBillPay('Mobile Recharge')">
+          <div class="icon-box bg-blue">📲</div>
+          Recharge
+        </div>
+        <div class="service-btn" onclick="openBillPay('Electricity Bill')">
+          <div class="icon-box bg-amber">💡</div>
+          Electricity
+        </div>
+        <div class="service-btn" onclick="openBillPay('FASTag Recharge')">
+          <div class="icon-box bg-emerald">🚗</div>
+          FASTag
+        </div>
+        <div class="service-btn" onclick="openBillPay('DTH / Cable')">
+          <div class="icon-box bg-purple">📡</div>
+          DTH TV
+        </div>
       </div>
 
-      <div class="card">
-        <b>Recent Activity</b>
-        <div id="recentHistoryList">
-          <div class="historyItem">
-            <span>🛒 ABC Store<br><small style="color:#64748b">USDT → INR</small></span>
-            <b class="red">-₹450</b>
+      <!-- MUDREX COIN SETS PROMO -->
+      <div class="section-title">
+        <span>Mudrex Coin Sets 🧺</span>
+        <span class="badge badge-gold">Expert Baskets</span>
+      </div>
+      <div class="card" style="border-left: 4px solid #4f46e5; cursor:pointer;" onclick="show('mudrex')">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <b style="font-size:14px;">Crypto Blue Chip Basket</b><br>
+            <small style="color:#64748b;">Top 5 Cryptos (BTC, ETH, SOL...)</small>
           </div>
-          <div class="historyItem">
-            <span>👤 Rahul<br><small style="color:#64748b">BTC → INR</small></span>
-            <b class="green">+₹1,200</b>
+          <div style="text-align:right;">
+            <span class="green">+18.4% 1Y</span><br>
+            <button class="secondary" style="padding:4px 10px; margin-top:4px; font-size:11px;">Invest ₹500</button>
           </div>
         </div>
-        <button class="secondary" onclick="show('history')">View Full History</button>
       </div>
     </section>
 
-    <!-- CRYPTO LIST -->
-    <section id="crypto" class="page">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h2 style="margin:0;">Live Market Rates</h2>
-        <button onclick="fetchLivePrices()" style="border:0; background:transparent; font-size:18px; cursor:pointer;">🔄</button>
-      </div>
-      <p class="small" style="color:#64748b; margin-top:2px;">Real-time prices via CoinGecko</p>
-      <div class="card" id="coinListContainer">
-        <p style="text-align:center; color:#64748b;">Loading prices...</p>
-      </div>
-    </section>
-
-    <!-- SEND -->
-    <section id="send" class="page">
-      <h2>Send Payment 💸</h2>
-      <div class="card">
-        <label>Receiver UPI / Mobile</label>
-        <input id="receiver" placeholder="e.g. 9876543210 or user@upi">
-
-        <label>Pay with Crypto</label>
-        <select id="coinSelect" onchange="calculate()">
-          <option value="BTC">Bitcoin (BTC)</option>
-          <option value="ETH">Ethereum (ETH)</option>
-          <option value="USDT" selected>Tether (USDT)</option>
-          <option value="SOL">Solana (SOL)</option>
-          <option value="DOGE">Dogecoin (DOGE)</option>
-        </select>
-
-        <label>Amount in INR</label>
-        <input id="amount" type="number" placeholder="₹ Enter INR amount" oninput="calculate()">
-
-        <p style="font-size:14px; color:#475569;">
-          Estimated crypto deduction: <b id="cryptoAmount" style="color:#0f172a;">0 USDT</b>
-        </p>
-
-        <button class="primary" onclick="confirmPayment()">Review Payment</button>
-      </div>
-    </section>
-
-    <!-- SCAN -->
+    <!-- TAB 2: SCAN & PAY -->
     <section id="scan" class="page">
-      <h2>Scan & Pay 📷</h2>
-      <div class="card" style="text-align:center">
-        <p><b>Merchant QR</b></p>
+      <h2 style="margin-top:0;">Scan Merchant QR 📷</h2>
+      <div class="card" style="text-align:center;">
+        <p class="small">Scan any PhonePe / BharatPe / UPI / Crypto QR</p>
         <div class="qr"></div>
-        <p>Merchant: <b>ABC General Store</b></p>
+        <p>Merchant: <b>Star Supermarket</b></p>
         <input id="scanAmount" type="number" placeholder="Enter amount in ₹">
-        <select id="scanCoin">
-          <option value="USDT">USDT</option>
-          <option value="BTC">BTC</option>
-          <option value="SOL">SOL</option>
+        <select id="scanPaymentMethod">
+          <option value="INR">Pay with SBI Bank UPI (₹)</option>
+          <option value="USDT">Pay with Mudrex USDT Wallet</option>
+          <option value="BTC">Pay with Bitcoin Holding</option>
         </select>
-        <button class="primary" onclick="scanPay()">Pay Merchant</button>
+        <button class="primary" onclick="processScanPay()">Pay Securely</button>
       </div>
     </section>
 
-    <!-- RECEIVE -->
+    <!-- TAB 3: MUDREX INVESTING & SIP -->
+    <section id="mudrex" class="page">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="margin:0;">Mudrex Wealth 📈</h2>
+        <span class="badge">Live CoinGecko Feed</span>
+      </div>
+      <p class="small" style="color:#64748b; margin-top:2px;">Automated SIP & Thematic Coin Sets</p>
+
+      <!-- QUICK CRYPTO SIP CARD -->
+      <div class="card" style="background:#f5f3ff; border-color:#ddd6fe;">
+        <b>⚡ Start Daily/Monthly Crypto SIP</b>
+        <p class="small" style="color:#5b21b6; margin:4px 0 10px;">Automate Bitcoin & Ethereum purchases with zero commission.</p>
+        <div class="grid-2">
+          <button class="primary" style="margin-top:0; font-size:13px;" onclick="openSipModal('BTC')">SIP in BTC (₹100/day)</button>
+          <button class="primary" style="margin-top:0; font-size:13px; background:#1e1b4b;" onclick="openSipModal('ETH')">SIP in ETH (₹100/day)</button>
+        </div>
+      </div>
+
+      <div class="section-title">Market Coins (1-Click Buy/Sell)</div>
+      <div class="card" id="cryptoMarketList">
+        <p style="text-align:center; color:#64748b;">Loading live market rates...</p>
+      </div>
+    </section>
+
+    <!-- TAB 4: PASSBOOK / HISTORY -->
+    <section id="history" class="page">
+      <h2 style="margin-top:0;">History & Passbook 📜</h2>
+      <div class="card" id="fullTxList"></div>
+    </section>
+
+    <!-- TAB 5: PROFILE & EKYC -->
+    <section id="profile" class="page">
+      <h2 style="margin-top:0;">Account & Security 🛡️</h2>
+      <div class="card">
+        <b>User Profile</b>
+        <label>Full Legal Name</label>
+        <input id="profName" value="Kamal Kumar">
+        <label>Linked Bank Account</label>
+        <input value="State Bank of India (••• 2847)" disabled style="background:#f1f5f9;">
+        <label>Primary UPI ID</label>
+        <input value="kamal@paynex" disabled style="background:#f1f5f9;">
+        <button class="primary" onclick="alert('Profile info updated!')">Save Changes</button>
+      </div>
+
+      <div class="card">
+        <b>Mudrex eKYC Status</b>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+          <span>Aadhaar & PAN Verification</span>
+          <span class="badge">VERIFIED ✓</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RECEIVE MODAL/PAGE -->
     <section id="receive" class="page">
-      <h2>Receive Money 📥</h2>
-      <div class="card" style="text-align:center">
-        <p><b>Your Personal QR</b></p>
+      <h2 style="margin-top:0;">My QR Code 📥</h2>
+      <div class="card" style="text-align:center;">
+        <p class="small">Accept UPI & Crypto Payments</p>
         <div class="qr"></div>
-        <p style="font-weight:700;">demo.user@cryptopay</p>
-        <button class="primary" onclick="alert('Payment ID Copied!')">Copy Payment ID</button>
+        <b style="font-size:16px;">kamal@paynex</b>
+        <p class="small" style="color:#64748b;">All payments settle directly to your SBI Bank / Mudrex Wallet</p>
+        <button class="primary" onclick="show('home')">Back to Home</button>
       </div>
     </section>
 
-    <!-- SECURITY -->
-    <section id="security" class="page">
-      <h2>Security Center 🛡️</h2>
+    <!-- TRANSFER & BILL FORM PAGE -->
+    <section id="actionForm" class="page">
+      <h2 id="actionTitle">Transfer Money</h2>
       <div class="card">
-        <div class="security"><span>🔐 Transaction PIN</span><span class="badge">ACTIVE</span></div>
-        <div class="security"><span>📲 2FA Auth</span><span class="badge">ENABLED</span></div>
-        <div class="security"><span>⚡ Live Oracle</span><span class="badge">CONNECTED</span></div>
+        <label id="actionInputLabel">Mobile Number / UPI ID</label>
+        <input id="actionTarget" placeholder="e.g. 9876543210 or name@upi">
+        <label>Amount (₹)</label>
+        <input id="actionAmount" type="number" placeholder="₹ Enter Amount">
+        <button class="primary" onclick="executePaymentFlow()">Proceed</button>
+        <button class="secondary" onclick="show('home')">Cancel</button>
       </div>
     </section>
 
-    <!-- CONFIRM -->
-    <section id="confirm" class="page">
-      <h2>Confirm Transaction</h2>
+    <!-- AUTH & PIN PAGE -->
+    <section id="pinPage" class="page">
+      <h2 style="margin-top:0;">Enter UPI / Security PIN</h2>
       <div class="card">
-        <p class="small">Receiver</p>
-        <h3 id="confirmReceiver" style="margin: 4px 0 14px;">---</h3>
-        
-        <p class="small">Amount</p>
-        <h2 id="confirmAmount" style="margin: 4px 0 14px;">₹0</h2>
-        
-        <p class="small">Crypto Deduction</p>
-        <h3 id="confirmCoin" style="margin: 4px 0 14px;">0 USDT</h3>
-
-        <label>Enter 4-Digit Demo PIN (e.g. 1234)</label>
-        <input id="pin" type="password" maxlength="4" placeholder="••••">
-        <button class="primary" onclick="startPayment()">Authorize & Settle</button>
+        <p class="small">Paying to: <b id="pinPayee">---</b></p>
+        <h2 id="pinAmountText" style="margin:4px 0 14px;">₹0</h2>
+        <label>Enter 4-Digit Secret PIN (1234)</label>
+        <input id="txPin" type="password" maxlength="4" placeholder="••••">
+        <button class="primary" onclick="startFinalSettlement()">Authorize Payment</button>
       </div>
     </section>
 
@@ -341,62 +404,54 @@
     <section id="processing" class="page">
       <div style="text-align:center; padding-top:80px;">
         <div class="loader"></div>
-        <h3 id="processText">Verifying transaction...</h3>
-        <p class="small">Executing crypto-fiat settlement</p>
+        <h3 id="processText">Connecting to Banking Switch / Mudrex Engine...</h3>
+        <p class="small">Please do not press back or refresh</p>
       </div>
     </section>
 
     <!-- SUCCESS -->
     <section id="success" class="page">
-      <div class="success">
-        <div class="successIcon">✓</div>
-        <h2>Payment Settled!</h2>
+      <div style="text-align:center; padding:20px 10px;">
+        <div style="width:65px; height:65px; border-radius:50%; background:#16a34a; color:white; display:flex; align-items:center; justify-content:center; margin:0 auto 12px; font-size:32px;">✓</div>
+        <h2 style="margin:0 0 4px;">Transaction Successful!</h2>
         <div class="card" style="text-align:left;">
           <p class="small">Settled Amount</p>
-          <h2 id="successAmount" style="margin:2px 0 12px;">₹0</h2>
-          <p class="small">Recipient</p>
-          <b id="successReceiver">---</b><br><br>
-          <p class="small">Deducted Asset</p>
-          <b id="successCoin">---</b>
+          <h2 id="successAmountText" style="margin:2px 0 10px;">₹0</h2>
+          <p class="small">Receiver / Service</p>
+          <b id="successTargetText">---</b><br><br>
+          <p class="small">Payment Mode</p>
+          <b id="successModeText">UPI Direct Settlement</b>
         </div>
-        <button class="primary" onclick="show('home')">Done</button>
+        <button class="primary" onclick="show('home')">Back to Home</button>
       </div>
     </section>
 
-    <!-- HISTORY -->
-    <section id="history" class="page">
-      <h2>All Transactions 📜</h2>
-      <div class="card" id="fullHistoryList">
-        <div class="historyItem">
-          <span>ABC Store<br><small style="color:#64748b">USDT → INR</small></span>
-          <b class="red">-₹450</b>
-        </div>
-        <div class="historyItem">
-          <span>Rahul<br><small style="color:#64748b">BTC → INR</small></span>
-          <b class="green">+₹1,200</b>
-        </div>
-      </div>
-    </section>
-
-    <!-- BOTTOM NAV -->
+    <!-- BOTTOM NAVBAR -->
     <nav class="bottom">
       <button class="nav" onclick="show('home')"><b>⌂</b>Home</button>
       <button class="nav" onclick="show('scan')"><b>▣</b>Scan</button>
-      <button class="nav" onclick="show('send')"><b>₹</b>Send</button>
-      <button class="nav" onclick="show('crypto')"><b>₿</b>Crypto</button>
-      <button class="nav" onclick="show('security')"><b>🛡</b>Security</button>
+      <button class="nav" onclick="show('mudrex')"><b>📈</b>Mudrex</button>
+      <button class="nav" onclick="show('history')"><b>📜</b>History</button>
+      <button class="nav" onclick="show('profile')"><b>👤</b>Profile</button>
     </nav>
   </div>
 
   <script>
-    let currentBalance = 24850;
-    let paymentData = {};
+    let inrBalance = 48250;
+    let cryptoValue = 12400;
+    let activeTx = {};
+
+    let transactions = [
+      { title: "Swiggy Order", sub: "UPI Payment", amount: 340, type: "debit" },
+      { title: "Mudrex BTC Daily SIP", sub: "Automated Investment", amount: 100, type: "debit" },
+      { title: "Salary Credit", sub: "Bank Transfer", amount: 25000, type: "credit" }
+    ];
 
     const cryptoConfig = {
       BTC:  { id: 'bitcoin',  name: 'Bitcoin',  icon: '₿', defaultRate: 8500000 },
       ETH:  { id: 'ethereum', name: 'Ethereum', icon: 'Ξ', defaultRate: 280000 },
-      USDT: { id: 'tether',   name: 'Tether',   icon: '₮', defaultRate: 86.5 },
       SOL:  { id: 'solana',   name: 'Solana',   icon: 'S', defaultRate: 16000 },
+      USDT: { id: 'tether',   name: 'Tether',   icon: '₮', defaultRate: 86.5 },
       DOGE: { id: 'dogecoin', name: 'Dogecoin', icon: 'Ð', defaultRate: 14.5 }
     };
 
@@ -408,13 +463,140 @@
       change24h[sym] = 0;
     });
 
+    function show(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) target.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function openTransferModal(type) {
+      if (type === 'Check Balance') {
+        alert(`Account Balances:\n• SBI Bank UPI: ₹${inrBalance.toLocaleString('en-IN')}\n• Mudrex Crypto Portfolio: ₹${cryptoValue.toLocaleString('en-IN')}`);
+        return;
+      }
+      document.getElementById('actionTitle').innerText = type;
+      document.getElementById('actionInputLabel').innerText = type === 'To Mobile' ? 'Receiver Mobile Number' : 'Bank Account / UPI ID';
+      document.getElementById('actionTarget').placeholder = type === 'To Mobile' ? '10-digit mobile' : 'name@upi or Account Number';
+      document.getElementById('actionTarget').value = '';
+      document.getElementById('actionAmount').value = '';
+      show('actionForm');
+    }
+
+    function openBillPay(billType) {
+      document.getElementById('actionTitle').innerText = billType;
+      document.getElementById('actionInputLabel').innerText = 'Consumer / Vehicle Number';
+      document.getElementById('actionTarget').placeholder = 'Enter details...';
+      document.getElementById('actionTarget').value = '';
+      document.getElementById('actionAmount').value = '';
+      show('actionForm');
+    }
+
+    function openSipModal(coin) {
+      activeTx = {
+        title: `Mudrex ${coin} SIP Setup`,
+        target: `${coin} Daily Auto-Invest`,
+        amount: 100,
+        mode: "Mudrex SIP Engine"
+      };
+      document.getElementById('pinPayee').innerText = activeTx.target;
+      document.getElementById('pinAmountText').innerText = "₹100 (Daily)";
+      show('pinPage');
+    }
+
+    function executePaymentFlow() {
+      const target = document.getElementById('actionTarget').value.trim();
+      const amount = parseFloat(document.getElementById('actionAmount').value);
+      const title = document.getElementById('actionTitle').innerText;
+
+      if (!target || !amount || amount <= 0) {
+        alert("Please enter valid details and amount.");
+        return;
+      }
+      if (amount > inrBalance) {
+        alert("Insufficient balance in bank account!");
+        return;
+      }
+
+      activeTx = {
+        title: title,
+        target: target,
+        amount: amount,
+        mode: "SBI UPI 2.0"
+      };
+
+      document.getElementById('pinPayee').innerText = target;
+      document.getElementById('pinAmountText').innerText = "₹" + amount.toLocaleString('en-IN');
+      show('pinPage');
+    }
+
+    function processScanPay() {
+      const amount = parseFloat(document.getElementById('scanAmount').value);
+      const mode = document.getElementById('scanPaymentMethod').value;
+      if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+
+      activeTx = {
+        title: "Merchant Payment",
+        target: "Star Supermarket",
+        amount: amount,
+        mode: mode === 'INR' ? "UPI Direct Settle" : `Mudrex ${mode} Swap`
+      };
+
+      document.getElementById('pinPayee').innerText = "Star Supermarket";
+      document.getElementById('pinAmountText').innerText = "₹" + amount.toLocaleString('en-IN');
+      show('pinPage');
+    }
+
+    function startFinalSettlement() {
+      const pin = document.getElementById('txPin').value;
+      if (pin.length !== 4) {
+        alert("Enter 4-digit PIN (1234)");
+        return;
+      }
+
+      show('processing');
+      const steps = [
+        "Verifying security PIN...",
+        "Authorizing payment gateway...",
+        "Executing instant settlement...",
+        "Success!"
+      ];
+      let i = 0;
+      const interval = setInterval(() => {
+        document.getElementById('processText').innerText = steps[i];
+        i++;
+        if (i >= steps.length) {
+          clearInterval(interval);
+          inrBalance -= activeTx.amount;
+          document.getElementById('inrBalanceText').innerText = "₹" + inrBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
+
+          document.getElementById('successAmountText').innerText = "₹" + activeTx.amount.toLocaleString('en-IN');
+          document.getElementById('successTargetText').innerText = activeTx.target;
+          document.getElementById('successModeText').innerText = activeTx.mode;
+
+          transactions.unshift({
+            title: activeTx.title,
+            sub: activeTx.target,
+            amount: activeTx.amount,
+            type: "debit"
+          });
+
+          renderHistory();
+          document.getElementById('txPin').value = '';
+          show('success');
+        }
+      }, 600);
+    }
+
     async function fetchLivePrices() {
       const ids = Object.values(cryptoConfig).map(c => c.id).join(',');
       const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=inr&include_24hr_change=true`;
 
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error();
         const data = await res.json();
         Object.keys(cryptoConfig).forEach(sym => {
           const coinId = cryptoConfig[sym].id;
@@ -423,16 +605,12 @@
             change24h[sym] = data[coinId].inr_24h_change || 0;
           }
         });
-        document.getElementById('apiDot').style.background = '#22c55e';
-      } catch (err) {
-        document.getElementById('apiDot').style.background = '#eab308';
-      }
+      } catch (err) {}
       renderCryptoList();
-      calculate();
     }
 
     function renderCryptoList() {
-      const container = document.getElementById('coinListContainer');
+      const container = document.getElementById('cryptoMarketList');
       let html = '';
       Object.keys(cryptoConfig).forEach(sym => {
         const coin = cryptoConfig[sym];
@@ -441,10 +619,15 @@
         const changeClass = change >= 0 ? 'green' : 'red';
         const changeSign = change >= 0 ? '+' : '';
         html += `
-          <div class="coin" onclick="selectCoin('${coin.name}', '${sym}')">
-            <div class="coinIcon">${coin.icon}</div>
-            <div class="coinInfo"><b>${coin.name}</b><br><small style="color:#64748b">${sym}</small></div>
-            <div style="text-align:right">
+          <div class="coin-row" onclick="buyCrypto('${coin.name}', '${sym}', ${rate})">
+            <div style="display:flex; align-items:center;">
+              <div class="coin-symbol-box">${coin.icon}</div>
+              <div>
+                <b>${coin.name}</b><br>
+                <small style="color:#64748b;">${sym}</small>
+              </div>
+            </div>
+            <div style="text-align:right;">
               <b>₹${rate.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</b><br>
               <span class="${changeClass}">${changeSign}${change.toFixed(2)}%</span>
             </div>
@@ -454,105 +637,48 @@
       container.innerHTML = html;
     }
 
-    function show(id) {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      const target = document.getElementById(id);
-      if (target) target.classList.add('active');
-      window.scrollTo(0, 0);
-    }
-
-    function selectCoin(name, symbol) {
-      const select = document.getElementById('coinSelect');
-      if (select) select.value = symbol;
-      show('send');
-      calculate();
-    }
-
-    function calculate() {
-      const amount = parseFloat(document.getElementById('amount').value) || 0;
-      const coin = document.getElementById('coinSelect').value;
-      const rate = liveRates[coin] || cryptoConfig[coin].defaultRate;
-      const cryptoDeduction = rate > 0 ? (amount / rate) : 0;
-      const precision = (coin === 'BTC' || coin === 'ETH') ? 6 : 4;
-      document.getElementById('cryptoAmount').innerText = `${cryptoDeduction.toFixed(precision)} ${coin}`;
-    }
-
-    function confirmPayment() {
-      const receiver = document.getElementById('receiver').value.trim();
-      const amount = parseFloat(document.getElementById('amount').value);
-      const coin = document.getElementById('coinSelect').value;
-
-      if (!receiver || !amount || amount <= 0) {
-        alert("Receiver aur valid amount enter karein.");
-        return;
-      }
-      if (amount > currentBalance) {
-        alert("Balance kam hai!");
-        return;
-      }
-
-      const rate = liveRates[coin];
-      const cryptoDeduction = (amount / rate).toFixed((coin === 'BTC' || coin === 'ETH') ? 6 : 4);
-      paymentData = { receiver, amount, coin, cryptoDeduction };
-
-      document.getElementById('confirmReceiver').innerText = receiver;
-      document.getElementById('confirmAmount').innerText = "₹" + amount.toLocaleString('en-IN');
-      document.getElementById('confirmCoin').innerText = `${cryptoDeduction} ${coin}`;
-      show('confirm');
-    }
-
-    function scanPay() {
-      const amount = parseFloat(document.getElementById('scanAmount').value);
-      const coin = document.getElementById('scanCoin').value;
-      if (!amount || amount <= 0) {
-        alert("Valid amount enter karein.");
-        return;
-      }
-      const rate = liveRates[coin];
-      const cryptoDeduction = (amount / rate).toFixed((coin === 'BTC' || coin === 'ETH') ? 6 : 4);
-      paymentData = { receiver: "ABC General Store", amount, coin, cryptoDeduction };
-
-      document.getElementById('confirmReceiver').innerText = "ABC General Store";
-      document.getElementById('confirmAmount').innerText = "₹" + amount.toLocaleString('en-IN');
-      document.getElementById('confirmCoin').innerText = `${cryptoDeduction} ${coin}`;
-      show('confirm');
-    }
-
-    function startPayment() {
-      const pin = document.getElementById('pin').value;
-      if (pin.length !== 4) {
-        alert("4-digit PIN enter karein.");
-        return;
-      }
-
-      show('processing');
-      const steps = [
-        "Verifying wallet PIN...",
-        "Checking live market rates...",
-        "Executing crypto swap...",
-        "Payment settled!"
-      ];
-      let i = 0;
-      const interval = setInterval(() => {
-        document.getElementById('processText').innerText = steps[i];
-        i++;
-        if (i >= steps.length) {
-          clearInterval(interval);
-          currentBalance -= paymentData.amount;
-          document.getElementById('headerBalance').innerText = "₹" + currentBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
-          document.getElementById('successAmount').innerText = "₹" + paymentData.amount.toLocaleString('en-IN');
-          document.getElementById('successReceiver').innerText = paymentData.receiver;
-          document.getElementById('successCoin').innerText = `${paymentData.cryptoDeduction} ${paymentData.coin}`;
-
-          document.getElementById('amount').value = '';
-          document.getElementById('receiver').value = '';
-          document.getElementById('pin').value = '';
-          show('success');
+    function buyCrypto(name, sym, rate) {
+      const amt = prompt(`Instant Buy ${name} (${sym})\nEnter INR amount to invest (Min ₹100):`, "500");
+      if (amt && parseFloat(amt) >= 100) {
+        const parsedAmt = parseFloat(amt);
+        if (parsedAmt > inrBalance) {
+          alert("Insufficient bank balance!");
+          return;
         }
-      }, 700);
+        inrBalance -= parsedAmt;
+        cryptoValue += parsedAmt;
+        document.getElementById('inrBalanceText').innerText = "₹" + inrBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        document.getElementById('cryptoValText').innerText = "₹" + cryptoValue.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        
+        transactions.unshift({
+          title: `Mudrex Buy: ${name}`,
+          sub: `Bought ${(parsedAmt / rate).toFixed(6)} ${sym}`,
+          amount: parsedAmt,
+          type: "debit"
+        });
+        renderHistory();
+        alert(`🎉 Successfully purchased ₹${parsedAmt} worth of ${name}! Added to Mudrex Portfolio.`);
+      }
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('fullTxList');
+      let html = '';
+      transactions.forEach(t => {
+        const sign = t.type === 'credit' ? '+' : '-';
+        const color = t.type === 'credit' ? 'green' : 'red';
+        html += `
+          <div class="historyItem">
+            <span><b>${t.title}</b><br><small style="color:#64748b;">${t.sub}</small></span>
+            <b class="${color}">${sign}₹${t.amount.toLocaleString('en-IN')}</b>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
     }
 
     fetchLivePrices();
+    renderHistory();
     setInterval(fetchLivePrices, 60000);
   </script>
 </body>
