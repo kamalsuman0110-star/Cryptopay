@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoPay</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0b0f19;
+      color: #0f172a;
+    }
+    .app {
+      max-width: 430px;
+      min-height: 100vh;
+      margin: auto;
+      background: #ffffff;
+      position: relative;
+      padding-bottom: 80px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 24px 20px;
+      border-radius: 0 0 24px 24px;
+    }
+    .logo-row { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 22px; font-weight: 800; }
+    .api-status {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; }
+    .small { font-size: 13px; opacity: 0.75; margin-top: 4px; }
+    .balance { margin-top: 18px; font-size: 32px; font-weight: 800; letter-spacing: -0.5px; }
+    .page { display: none; padding: 18px; }
+    .page.active { display: block; }
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 14px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+    .action {
+      padding: 16px 10px;
+      border: 0;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .action:active { background: #e2e8f0; }
+    .coin {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid #f1f5f9;
+      cursor: pointer;
+    }
+    .coin:last-child { border: 0; }
+    .coinIcon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+    .coinInfo { flex: 1; margin-left: 12px; }
+    .green { color: #16a34a; font-weight: 600; }
+    .red { color: #dc2626; font-weight: 600; }
+    label { font-size: 13px; font-weight: 600; color: #475569; display: block; margin-top: 10px; }
+    input, select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      margin: 6px 0 12px;
+      font-size: 15px;
+      background: #fff;
+    }
+    button.primary {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 12px;
+      background: #0f172a;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    button.secondary {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      background: white;
+      color: #0f172a;
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .bottom {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 430px;
+      height: 65px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 10;
+    }
+    .nav { border: 0; background: none; font-size: 11px; cursor: pointer; color: #64748b; }
+    .nav b { display: block; font-size: 18px; margin-bottom: 2px; }
+    .qr {
+      width: 180px;
+      height: 180px;
+      margin: 16px auto;
+      background: repeating-linear-gradient(45deg, #0f172a 0 4px, #fff 4px 8px);
+      border: 10px solid white;
+      box-shadow: 0 0 0 1px #cbd5e1;
+    }
+    .success { text-align: center; padding: 25px 10px; }
+    .successIcon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #16a34a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 36px;
+    }
+    .security {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .loader {
+      width: 44px;
+      height: 44px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid #0f172a;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 30px auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .historyItem {
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo-row">
+        <div class="logo">₿ CryptoPay</div>
+        <div class="api-status">
+          <span class="dot" id="apiDot"></span>
+          <span id="apiStatusText">Live Feed</span>
+        </div>
+      </div>
+      <div class="small">Live Crypto-to-INR Payment Gateway</div>
+      <div class="balance" id="headerBalance">₹24,850.00</div>
+      <div class="small">Available Wallet Balance</div>
+    </header>
+
+    <!-- HOME -->
+    <section id="home" class="page active">
+      <h2 style="margin: 0 0 10px;">Good Morning 👋</h2>
+      <div class="grid">
+        <button class="action" onclick="show('send')"><span>💸</span> Send</button>
+        <button class="action" onclick="show('scan')"><span>📷</span> Scan & Pay</button>
+        <button class="action" onclick="show('receive')"><span>📥</span> Receive</button>
+        <button class="action" onclick="show('crypto')"><span>🪙</span> All Crypto</button>
+      </div>
+
+      <div class="card">
+        <b>🛡️ Security Center</b>
+        <p class="small" style="margin: 4px 0 10px;">PIN verification active</p>
+        <span class="badge">SECURED</span>
+        <button class="secondary" onclick="show('security')">View Security Settings</button>
+      </div>
+
+      <div class="card">
+        <b>Recent Activity</b>
+        <div id="recentHistoryList">
+          <div class="historyItem">
+            <span>🛒 ABC Store<br><small style="color:#64748b">USDT → INR</small></span>
+            <b class="red">-₹450</b>
+          </div>
+          <div class="historyItem">
+            <span>👤 Rahul<br><small style="color:#64748b">BTC → INR</small></span>
+            <b class="green">+₹1,200</b>
+          </div>
+        </div>
+        <button class="secondary" onclick="show('history')">View Full History</button>
+      </div>
+    </section>
+
+    <!-- CRYPTO LIST -->
+    <section id="crypto" class="page">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="margin:0;">Live Market Rates</h2>
+        <button onclick="fetchLivePrices()" style="border:0; background:transparent; font-size:18px; cursor:pointer;">🔄</button>
+      </div>
+      <p class="small" style="color:#64748b; margin-top:2px;">Real-time prices via CoinGecko</p>
+      <div class="card" id="coinListContainer">
+        <p style="text-align:center; color:#64748b;">Loading prices...</p>
+      </div>
+    </section>
+
+    <!-- SEND -->
+    <section id="send" class="page">
+      <h2>Send Payment 💸</h2>
+      <div class="card">
+        <label>Receiver UPI / Mobile</label>
+        <input id="receiver" placeholder="e.g. 9876543210 or user@upi">
+
+        <label>Pay with Crypto</label>
+        <select id="coinSelect" onchange="calculate()">
+          <option value="BTC">Bitcoin (BTC)</option>
+          <option value="ETH">Ethereum (ETH)</option>
+          <option value="USDT" selected>Tether (USDT)</option>
+          <option value="SOL">Solana (SOL)</option>
+          <option value="DOGE">Dogecoin (DOGE)</option>
+        </select>
+
+        <label>Amount in INR</label>
+        <input id="amount" type="number" placeholder="₹ Enter INR amount" oninput="calculate()">
+
+        <p style="font-size:14px; color:#475569;">
+          Estimated crypto deduction: <b id="cryptoAmount" style="color:#0f172a;">0 USDT</b>
+        </p>
+
+        <button class="primary" onclick="confirmPayment()">Review Payment</button>
+      </div>
+    </section>
+
+    <!-- SCAN -->
+    <section id="scan" class="page">
+      <h2>Scan & Pay 📷</h2>
+      <div class="card" style="text-align:center">
+        <p><b>Merchant QR</b></p>
+        <div class="qr"></div>
+        <p>Merchant: <b>ABC General Store</b></p>
+        <input id="scanAmount" type="number" placeholder="Enter amount in ₹">
+        <select id="scanCoin">
+          <option value="USDT">USDT</option>
+          <option value="BTC">BTC</option>
+          <option value="SOL">SOL</option>
+        </select>
+        <button class="primary" onclick="scanPay()">Pay Merchant</button>
+      </div>
+    </section>
+
+    <!-- RECEIVE -->
+    <section id="receive" class="page">
+      <h2>Receive Money 📥</h2>
+      <div class="card" style="text-align:center">
+        <p><b>Your Personal QR</b></p>
+        <div class="qr"></div>
+        <p style="font-weight:700;">demo.user@cryptopay</p>
+        <button class="primary" onclick="alert('Payment ID Copied!')">Copy Payment ID</button>
+      </div>
+    </section>
+
+    <!-- SECURITY -->
+    <section id="security" class="page">
+      <h2>Security Center 🛡️</h2>
+      <div class="card">
+        <div class="security"><span>🔐 Transaction PIN</span><span class="badge">ACTIVE</span></div>
+        <div class="security"><span>📲 2FA Auth</span><span class="badge">ENABLED</span></div>
+        <div class="security"><span>⚡ Live Oracle</span><span class="badge">CONNECTED</span></div>
+      </div>
+    </section>
+
+    <!-- CONFIRM -->
+    <section id="confirm" class="page">
+      <h2>Confirm Transaction</h2>
+      <div class="card">
+        <p class="small">Receiver</p>
+        <h3 id="confirmReceiver" style="margin: 4px 0 14px;">---</h3>
+        
+        <p class="small">Amount</p>
+        <h2 id="confirmAmount" style="margin: 4px 0 14px;">₹0</h2>
+        
+        <p class="small">Crypto Deduction</p>
+        <h3 id="confirmCoin" style="margin: 4px 0 14px;">0 USDT</h3>
+
+        <label>Enter 4-Digit Demo PIN (e.g. 1234)</label>
+        <input id="pin" type="password" maxlength="4" placeholder="••••">
+        <button class="primary" onclick="startPayment()">Authorize & Settle</button>
+      </div>
+    </section>
+
+    <!-- PROCESSING -->
+    <section id="processing" class="page">
+      <div style="text-align:center; padding-top:80px;">
+        <div class="loader"></div>
+        <h3 id="processText">Verifying transaction...</h3>
+        <p class="small">Executing crypto-fiat settlement</p>
+      </div>
+    </section>
+
+    <!-- SUCCESS -->
+    <section id="success" class="page">
+      <div class="success">
+        <div class="successIcon">✓</div>
+        <h2>Payment Settled!</h2>
+        <div class="card" style="text-align:left;">
+          <p class="small">Settled Amount</p>
+          <h2 id="successAmount" style="margin:2px 0 12px;">₹0</h2>
+          <p class="small">Recipient</p>
+          <b id="successReceiver">---</b><br><br>
+          <p class="small">Deducted Asset</p>
+          <b id="successCoin">---</b>
+        </div>
+        <button class="primary" onclick="show('home')">Done</button>
+      </div>
+    </section>
+
+    <!-- HISTORY -->
+    <section id="history" class="page">
+      <h2>All Transactions 📜</h2>
+      <div class="card" id="fullHistoryList">
+        <div class="historyItem">
+          <span>ABC Store<br><small style="color:#64748b">USDT → INR</small></span>
+          <b class="red">-₹450</b>
+        </div>
+        <div class="historyItem">
+          <span>Rahul<br><small style="color:#64748b">BTC → INR</small></span>
+          <b class="green">+₹1,200</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom">
+      <button class="nav" onclick="show('home')"><b>⌂</b>Home</button>
+      <button class="nav" onclick="show('scan')"><b>▣</b>Scan</button>
+      <button class="nav" onclick="show('send')"><b>₹</b>Send</button>
+      <button class="nav" onclick="show('crypto')"><b>₿</b>Crypto</button>
+      <button class="nav" onclick="show('security')"><b>🛡</b>Security</button>
+    </nav>
+  </div>
+
+  <script>
+    let currentBalance = 24850;
+    let paymentData = {};
+
+    const cryptoConfig = {
+      BTC:  { id: 'bitcoin',  name: 'Bitcoin',  icon: '₿', defaultRate: 8500000 },
+      ETH:  { id: 'ethereum', name: 'Ethereum', icon: 'Ξ', defaultRate: 280000 },
+      USDT: { id: 'tether',   name: 'Tether',   icon: '₮', defaultRate: 86.5 },
+      SOL:  { id: 'solana',   name: 'Solana',   icon: 'S', defaultRate: 16000 },
+      DOGE: { id: 'dogecoin', name: 'Dogecoin', icon: 'Ð', defaultRate: 14.5 }
+    };
+
+    let liveRates = {};
+    let change24h = {};
+
+    Object.keys(cryptoConfig).forEach(sym => {
+      liveRates[sym] = cryptoConfig[sym].defaultRate;
+      change24h[sym] = 0;
+    });
+
+    async function fetchLivePrices() {
+      const ids = Object.values(cryptoConfig).map(c => c.id).join(',');
+      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=inr&include_24hr_change=true`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        Object.keys(cryptoConfig).forEach(sym => {
+          const coinId = cryptoConfig[sym].id;
+          if (data[coinId] && data[coinId].inr) {
+            liveRates[sym] = data[coinId].inr;
+            change24h[sym] = data[coinId].inr_24h_change || 0;
+          }
+        });
+        document.getElementById('apiDot').style.background = '#22c55e';
+      } catch (err) {
+        document.getElementById('apiDot').style.background = '#eab308';
+      }
+      renderCryptoList();
+      calculate();
+    }
+
+    function renderCryptoList() {
+      const container = document.getElementById('coinListContainer');
+      let html = '';
+      Object.keys(cryptoConfig).forEach(sym => {
+        const coin = cryptoConfig[sym];
+        const rate = liveRates[sym];
+        const change = change24h[sym];
+        const changeClass = change >= 0 ? 'green' : 'red';
+        const changeSign = change >= 0 ? '+' : '';
+        html += `
+          <div class="coin" onclick="selectCoin('${coin.name}', '${sym}')">
+            <div class="coinIcon">${coin.icon}</div>
+            <div class="coinInfo"><b>${coin.name}</b><br><small style="color:#64748b">${sym}</small></div>
+            <div style="text-align:right">
+              <b>₹${rate.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</b><br>
+              <span class="${changeClass}">${changeSign}${change.toFixed(2)}%</span>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    function show(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) target.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    function selectCoin(name, symbol) {
+      const select = document.getElementById('coinSelect');
+      if (select) select.value = symbol;
+      show('send');
+      calculate();
+    }
+
+    function calculate() {
+      const amount = parseFloat(document.getElementById('amount').value) || 0;
+      const coin = document.getElementById('coinSelect').value;
+      const rate = liveRates[coin] || cryptoConfig[coin].defaultRate;
+      const cryptoDeduction = rate > 0 ? (amount / rate) : 0;
+      const precision = (coin === 'BTC' || coin === 'ETH') ? 6 : 4;
+      document.getElementById('cryptoAmount').innerText = `${cryptoDeduction.toFixed(precision)} ${coin}`;
+    }
+
+    function confirmPayment() {
+      const receiver = document.getElementById('receiver').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const coin = document.getElementById('coinSelect').value;
+
+      if (!receiver || !amount || amount <= 0) {
+        alert("Receiver aur valid amount enter karein.");
+        return;
+      }
+      if (amount > currentBalance) {
+        alert("Balance kam hai!");
+        return;
+      }
+
+      const rate = liveRates[coin];
+      const cryptoDeduction = (amount / rate).toFixed((coin === 'BTC' || coin === 'ETH') ? 6 : 4);
+      paymentData = { receiver, amount, coin, cryptoDeduction };
+
+      document.getElementById('confirmReceiver').innerText = receiver;
+      document.getElementById('confirmAmount').innerText = "₹" + amount.toLocaleString('en-IN');
+      document.getElementById('confirmCoin').innerText = `${cryptoDeduction} ${coin}`;
+      show('confirm');
+    }
+
+    function scanPay() {
+      const amount = parseFloat(document.getElementById('scanAmount').value);
+      const coin = document.getElementById('scanCoin').value;
+      if (!amount || amount <= 0) {
+        alert("Valid amount enter karein.");
+        return;
+      }
+      const rate = liveRates[coin];
+      const cryptoDeduction = (amount / rate).toFixed((coin === 'BTC' || coin === 'ETH') ? 6 : 4);
+      paymentData = { receiver: "ABC General Store", amount, coin, cryptoDeduction };
+
+      document.getElementById('confirmReceiver').innerText = "ABC General Store";
+      document.getElementById('confirmAmount').innerText = "₹" + amount.toLocaleString('en-IN');
+      document.getElementById('confirmCoin').innerText = `${cryptoDeduction} ${coin}`;
+      show('confirm');
+    }
+
+    function startPayment() {
+      const pin = document.getElementById('pin').value;
+      if (pin.length !== 4) {
+        alert("4-digit PIN enter karein.");
+        return;
+      }
+
+      show('processing');
+      const steps = [
+        "Verifying wallet PIN...",
+        "Checking live market rates...",
+        "Executing crypto swap...",
+        "Payment settled!"
+      ];
+      let i = 0;
+      const interval = setInterval(() => {
+        document.getElementById('processText').innerText = steps[i];
+        i++;
+        if (i >= steps.length) {
+          clearInterval(interval);
+          currentBalance -= paymentData.amount;
+          document.getElementById('headerBalance').innerText = "₹" + currentBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
+          document.getElementById('successAmount').innerText = "₹" + paymentData.amount.toLocaleString('en-IN');
+          document.getElementById('successReceiver').innerText = paymentData.receiver;
+          document.getElementById('successCoin').innerText = `${paymentData.cryptoDeduction} ${paymentData.coin}`;
+
+          document.getElementById('amount').value = '';
+          document.getElementById('receiver').value = '';
+          document.getElementById('pin').value = '';
+          show('success');
+        }
+      }, 700);
+    }
+
+    fetchLivePrices();
+    setInterval(fetchLivePrices, 60000);
+  </script>
+</body>
+</html>
