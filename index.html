@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CryptoPay Pro</title>
+  <!-- Ethers.js for Web3 Blockchain Interaction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
@@ -296,7 +298,7 @@
       </div>
       <div class="wallet-summary">
         <div class="wallet-col">
-          <small>INR Bank / UPI Balance</small>
+          <small>INR Bank / UPI</small>
           <b id="inrBalanceText">₹48,250.00</b>
         </div>
         <div class="wallet-col" style="border-left: 1px solid rgba(255,255,255,0.2); padding-left:12px;">
@@ -308,6 +310,17 @@
 
     <!-- TAB 1: HOME (PHONEPE UPI & SERVICES) -->
     <section id="home" class="page active">
+      <!-- WEB3 ON-CHAIN CONNECT BANNER -->
+      <div class="card" style="background:#0f172a; color:white; border-color:#1e293b;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <b style="font-size:13px;">🔗 On-Chain Web3 Wallet</b><br>
+            <small id="web3StatusText" style="color:#94a3b8;">Not Connected</small>
+          </div>
+          <button class="primary" id="connectWeb3Btn" style="width:auto; padding:6px 12px; margin-top:0; font-size:12px; background:#4f46e5;" onclick="connectWeb3Wallet()">Connect</button>
+        </div>
+      </div>
+
       <div class="section-title">
         <span>Transfer Money</span>
         <span id="kycBadgeHome" class="badge badge-unverified">eKYC Required</span>
@@ -529,27 +542,32 @@
   </div>
 
   <script>
-    // SHA-256 HASH OF DEMO PIN '1234'
     const CORRECT_PIN_HASH = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
 
-    let inrBalance = 48250;
-    let cryptoValue = 12400;
-    let isKycDone = false;
+    // Persistent LocalStorage State
+    let inrBalance = parseFloat(localStorage.getItem('cp_inrBalance')) || 48250;
+    let cryptoValue = parseFloat(localStorage.getItem('cp_cryptoValue')) || 12400;
+    let isKycDone = localStorage.getItem('cp_isKycDone') === 'true';
     let activeTx = {};
     let enteredCode = "";
 
-    let transactions = [
+    let transactions = JSON.parse(localStorage.getItem('cp_transactions')) || [
       { title: "CryptoPay BlueChip SIP", sub: "Automated Daily Basket", amount: 500, type: "debit" },
       { title: "Zomato Order", sub: "UPI Payment", amount: 420, type: "debit" },
       { title: "Salary Direct Credit", sub: "NEFT Settlement", amount: 35000, type: "credit" }
     ];
 
     const cryptoConfig = {
-      BTC:  { id: 'bitcoin',  name: 'Bitcoin',  icon: '₿', defaultRate: 8500000 },
-      ETH:  { id: 'ethereum', name: 'Ethereum', icon: 'Ξ', defaultRate: 280000 },
-      SOL:  { id: 'solana',   name: 'Solana',   icon: 'S', defaultRate: 16000 },
-      USDT: { id: 'tether',   name: 'Tether',   icon: '₮', defaultRate: 86.5 },
-      DOGE: { id: 'dogecoin', name: 'Dogecoin', icon: 'Ð', defaultRate: 14.5 }
+      BTC:   { id: 'bitcoin',       name: 'Bitcoin',   icon: '₿', defaultRate: 8500000 },
+      ETH:   { id: 'ethereum',      name: 'Ethereum',  icon: 'Ξ', defaultRate: 280000 },
+      SOL:   { id: 'solana',        name: 'Solana',    icon: 'S', defaultRate: 16000 },
+      USDT:  { id: 'tether',        name: 'Tether',    icon: '₮', defaultRate: 86.5 },
+      DOGE:  { id: 'dogecoin',      name: 'Dogecoin',  icon: 'Ð', defaultRate: 14.5 },
+      XRP:   { id: 'ripple',        name: 'XRP',       icon: 'X', defaultRate: 195 },
+      PEPE:  { id: 'pepe',          name: 'Pepe',      icon: '🐸', defaultRate: 0.00085 },
+      SHIB:  { id: 'shiba-inu',     name: 'Shiba Inu', icon: '🐕', defaultRate: 0.0019 },
+      FLOKI: { id: 'floki',         name: 'Floki',     icon: '⚔️', defaultRate: 0.015 },
+      ZIL:   { id: 'zilliqa',       name: 'Zilliqa',   icon: 'Z', defaultRate: 1.85 }
     };
 
     let liveRates = {};
@@ -560,7 +578,35 @@
       change24h[sym] = 0;
     });
 
-    // Native Web Crypto SHA-256 Hasher
+    function saveState() {
+      localStorage.setItem('cp_inrBalance', inrBalance);
+      localStorage.setItem('cp_cryptoValue', cryptoValue);
+      localStorage.setItem('cp_isKycDone', isKycDone);
+      localStorage.setItem('cp_transactions', JSON.stringify(transactions));
+    }
+
+    // Web3 Live Blockchain Connector
+    async function connectWeb3Wallet() {
+      if (window.ethereum) {
+        try {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          const signer = provider.getSigner();
+          const address = await signer.getAddress();
+          const balance = await provider.getBalance(address);
+          const ethBalance = ethers.utils.formatEther(balance);
+
+          document.getElementById('web3StatusText').innerText = `${address.slice(0, 6)}...${address.slice(-4)} (${parseFloat(ethBalance).toFixed(4)} ETH)`;
+          document.getElementById('connectWeb3Btn').innerText = 'Connected';
+          document.getElementById('connectWeb3Btn').style.background = '#16a34a';
+        } catch (err) {
+          alert('Web3 connection rejected or failed.');
+        }
+      } else {
+        alert('No Web3 Wallet detected. Please open inside MetaMask / Trust Wallet browser.');
+      }
+    }
+
     async function sha256(message) {
       const msgBuffer = new TextEncoder().encode(message);
       const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -568,14 +614,11 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    // Keypad Logic
     function pressKey(num) {
       if (enteredCode.length < 4) {
         enteredCode += num;
         updateDots();
-        if (enteredCode.length === 4) {
-          verifyLockPin();
-        }
+        if (enteredCode.length === 4) verifyLockPin();
       }
     }
 
@@ -746,6 +789,7 @@
             type: "debit"
           });
 
+          saveState();
           renderHistory();
           document.getElementById('txPin').value = '';
           show('success');
@@ -766,12 +810,19 @@
 
       setTimeout(() => {
         isKycDone = true;
-        document.getElementById('userStatusDot').style.background = '#22c55e';
-        document.getElementById('kycBadgeHome').className = 'badge';
-        document.getElementById('kycBadgeHome').innerText = 'Verified ✓';
+        updateKycUI();
+        saveState();
         alert('🎉 eKYC Verified Successfully! Fund transfer features unlocked.');
         show('home');
       }, 1500);
+    }
+
+    function updateKycUI() {
+      if (isKycDone) {
+        document.getElementById('userStatusDot').style.background = '#22c55e';
+        document.getElementById('kycBadgeHome').className = 'badge';
+        document.getElementById('kycBadgeHome').innerText = 'Verified ✓';
+      }
     }
 
     async function fetchLivePrices() {
@@ -811,7 +862,7 @@
               </div>
             </div>
             <div style="text-align:right;">
-              <b>₹${rate.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</b><br>
+              <b>₹${rate.toLocaleString('en-IN', { maximumFractionDigits: (rate < 1 ? 4 : 2) })}</b><br>
               <span class="${changeClass}">${changeSign}${change.toFixed(2)}%</span>
             </div>
           </div>
@@ -835,10 +886,11 @@
 
         transactions.unshift({
           title: `CryptoPay Buy: ${name}`,
-          sub: `Bought ${(parsedAmt / rate).toFixed(6)} ${sym}`,
+          sub: `Bought ${(parsedAmt / rate).toFixed(4)} ${sym}`,
           amount: parsedAmt,
           type: "debit"
         });
+        saveState();
         renderHistory();
         alert(`🎉 Purchased ₹${parsedAmt} of ${name}! Added to CryptoPay Portfolio.`);
       }
@@ -860,13 +912,17 @@
       container.innerHTML = html;
     }
 
-    // Auto Session check on load
+    // Initialize state
+    document.getElementById('inrBalanceText').innerText = "₹" + inrBalance.toLocaleString('en-IN', {minimumFractionDigits: 2});
+    document.getElementById('cryptoValText').innerText = "₹" + cryptoValue.toLocaleString('en-IN', {minimumFractionDigits: 2});
+    updateKycUI();
+    renderHistory();
+
     if (sessionStorage.getItem('cryptopay_auth') === 'active') {
       document.getElementById('lockScreen').style.display = 'none';
     }
 
     fetchLivePrices();
-    renderHistory();
     setInterval(fetchLivePrices, 60000);
   </script>
 </body>
